@@ -45,9 +45,13 @@
         initializeSliders() {
             if (this.$turnoverSlider && this.$turnoverSlider.length) {
                 this.updateSliderProgress(this.$turnoverSlider);
+                // Set initial formatted value
+                this.$turnoverValue.text(this.monthlyTurnover.toLocaleString());
             }
             if (this.$durationSlider && this.$durationSlider.length) {
                 this.updateSliderProgress(this.$durationSlider);
+                // Set initial value
+                this.$durationValue.text(this.loanDuration);
             }
         }
 
@@ -94,6 +98,7 @@
                     self.monthlyTurnover = value;
                     self.$turnoverValue.text(value.toLocaleString());
                     self.updateSliderProgress($(this));
+                    self.calculateLoan(); // Real-time calculation
                 });
             }
 
@@ -104,6 +109,7 @@
                     self.loanDuration = value;
                     self.$durationValue.text(value);
                     self.updateSliderProgress($(this));
+                    self.calculateLoan(); // Real-time calculation
                 });
             }
 
