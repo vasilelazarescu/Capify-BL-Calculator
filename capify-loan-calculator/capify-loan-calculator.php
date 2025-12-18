@@ -138,46 +138,50 @@ class Capify_Loan_Calculator {
                     <?php endif; ?>
 
                     <div class="calculator-form">
-                        <div class="form-group">
-                            <label for="loan-amount"><?php echo esc_html($atts['amount_label']); ?></label>
-                            <div class="input-wrapper">
-                                <span class="currency-symbol"><?php echo esc_html($atts['currency_symbol']); ?></span>
-                                <input type="text" id="loan-amount" class="form-control" value="<?php echo esc_attr($atts['default_amount']); ?>" aria-label="<?php echo esc_attr($atts['amount_label']); ?>" />
+                        <div class="form-group slider-primary">
+                            <label class="slider-label"><?php echo esc_html($atts['amount_label']); ?></label>
+                            <div class="slider-value-display" id="amount-display">
+                                <?php echo esc_html($atts['currency_symbol']); ?><span id="amount-value"><?php echo number_format($atts['default_amount']); ?></span>
                             </div>
-                            <div class="slider-container">
-                                <input type="range" id="loan-amount-slider" class="range-slider" min="1000" max="1000000" step="1000" value="<?php echo esc_attr($atts['default_amount']); ?>" aria-label="<?php echo esc_attr($atts['amount_label']); ?> slider" />
+                            <div class="slider-wrapper">
+                                <input type="range" id="loan-amount-slider" class="range-slider primary" min="1000" max="1000000" step="1000" value="<?php echo esc_attr($atts['default_amount']); ?>" aria-label="<?php echo esc_attr($atts['amount_label']); ?>" />
+                            </div>
+                            <div class="slider-range-labels">
+                                <span><?php echo esc_html($atts['currency_symbol']); ?>1,000</span>
+                                <span><?php echo esc_html($atts['currency_symbol']); ?>1,000,000</span>
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label for="interest-rate"><?php echo esc_html($atts['rate_label']); ?></label>
-                            <div class="input-wrapper">
-                                <span class="percent-symbol">%</span>
-                                <input type="text" id="interest-rate" class="form-control" value="<?php echo esc_attr($atts['default_rate']); ?>" aria-label="<?php echo esc_attr($atts['rate_label']); ?>" />
+                        <div class="form-group slider-primary">
+                            <label class="slider-label"><?php echo esc_html($atts['duration_label']); ?></label>
+                            <div class="slider-value-display" id="duration-display">
+                                <span id="duration-value"><?php echo esc_attr($atts['default_duration']); ?></span> months
                             </div>
-                            <div class="slider-container">
-                                <input type="range" id="interest-rate-slider" class="range-slider" min="0.1" max="30" step="0.1" value="<?php echo esc_attr($atts['default_rate']); ?>" aria-label="<?php echo esc_attr($atts['rate_label']); ?> slider" />
+                            <div class="slider-wrapper">
+                                <input type="range" id="duration-slider" class="range-slider primary" min="12" max="72" step="12" value="<?php echo esc_attr($atts['default_duration']); ?>" aria-label="<?php echo esc_attr($atts['duration_label']); ?>" />
+                            </div>
+                            <div class="slider-range-labels">
+                                <span>12 months</span>
+                                <span>72 months</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group slider-primary">
+                            <label class="slider-label"><?php echo esc_html($atts['rate_label']); ?></label>
+                            <div class="slider-value-display" id="rate-display">
+                                <span id="rate-value"><?php echo esc_attr($atts['default_rate']); ?></span>%
+                            </div>
+                            <div class="slider-wrapper">
+                                <input type="range" id="interest-rate-slider" class="range-slider primary" min="0.1" max="30" step="0.1" value="<?php echo esc_attr($atts['default_rate']); ?>" aria-label="<?php echo esc_attr($atts['rate_label']); ?>" />
                             </div>
                             <?php if (!empty($atts['rate_help_text'])): ?>
                             <p class="help-text"><?php echo esc_html($atts['rate_help_text']); ?></p>
                             <?php endif; ?>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo esc_html($atts['duration_label']); ?></label>
-                            <div class="duration-buttons" role="group" aria-label="<?php echo esc_attr($atts['duration_label']); ?>">
-                                <button type="button" class="duration-btn" data-months="12" aria-pressed="false" tabindex="0">12<br>months</button>
-                                <button type="button" class="duration-btn active" data-months="24" aria-pressed="true" tabindex="0">24<br>months</button>
-                                <button type="button" class="duration-btn" data-months="36" aria-pressed="false" tabindex="0">36<br>months</button>
-                            </div>
-                            <div class="duration-buttons" role="group">
-                                <button type="button" class="duration-btn" data-months="48" aria-pressed="false" tabindex="0">48<br>months</button>
-                                <button type="button" class="duration-btn" data-months="60" aria-pressed="false" tabindex="0">60<br>months</button>
-                                <button type="button" class="duration-btn" data-months="72" aria-pressed="false" tabindex="0">72<br>months</button>
+                            <div class="slider-range-labels">
+                                <span>0.1%</span>
+                                <span>30%</span>
                             </div>
                         </div>
-
-                        <button type="button" id="calculate-btn" class="calculate-btn"><?php echo esc_html($atts['calculate_button_text']); ?></button>
                     </div>
 
                     <?php if (!empty($atts['disclaimer_text'])): ?>
@@ -186,58 +190,49 @@ class Capify_Loan_Calculator {
                 </div>
 
                 <div class="calculator-right">
-                    <h2><?php echo esc_html($atts['results_title']); ?></h2>
+                    <div class="results-header">
+                        <h2>Your Estimate</h2>
+                        <p class="results-subtitle">Based on your selections</p>
+                    </div>
 
-                    <div class="visual-breakdown">
-                        <h3>Cost Breakdown</h3>
-                        <div class="breakdown-chart" role="img" aria-label="Visual representation of principal and interest">
-                            <div id="principal-bar" class="breakdown-bar" style="width: 88%;"></div>
-                            <div id="interest-bar" class="breakdown-bar" style="width: 12%;"></div>
+                    <div class="highlight-result">
+                        <div class="highlight-label"><?php echo esc_html($atts['monthly_payment_label']); ?></div>
+                        <div class="highlight-value" id="monthly-payment" aria-live="polite">
+                            <?php echo esc_html($atts['currency_symbol']); ?>4,221.57
                         </div>
-                        <div class="breakdown-legend">
-                            <div class="legend-item">
-                                <div class="legend-color principal"></div>
-                                <div class="legend-text">
-                                    <div class="legend-label">Principal Amount</div>
-                                    <div class="legend-amount" id="principal-amount"><?php echo esc_html($atts['currency_symbol']); ?>100,000.00</div>
-                                </div>
-                            </div>
-                            <div class="legend-item">
-                                <div class="legend-color interest"></div>
-                                <div class="legend-text">
-                                    <div class="legend-label">Total Interest</div>
-                                    <div class="legend-amount" id="interest-amount"><?php echo esc_html($atts['currency_symbol']); ?>1,317.78</div>
-                                </div>
-                            </div>
+                        <div class="highlight-period">per month</div>
+                    </div>
+
+                    <div class="repayment-breakdown">
+                        <h3>Repayment Breakdown</h3>
+
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">Loan Amount</span>
+                            <span class="breakdown-value" id="loan-principal"><?php echo esc_html($atts['currency_symbol']); ?>100,000</span>
+                        </div>
+
+                        <div class="breakdown-row">
+                            <span class="breakdown-label"><?php echo esc_html($atts['total_interest_label']); ?></span>
+                            <span class="breakdown-value" id="total-interest" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>1,317.78</span>
+                        </div>
+
+                        <div class="breakdown-row">
+                            <span class="breakdown-label"><?php echo esc_html($atts['loan_length_label']); ?></span>
+                            <span class="breakdown-value" id="loan-length" aria-live="polite">24 months</span>
+                        </div>
+
+                        <div class="breakdown-row total-row">
+                            <span class="breakdown-label"><?php echo esc_html($atts['total_cost_label']); ?></span>
+                            <span class="breakdown-value total" id="total-cost" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>101,317.78</span>
                         </div>
                     </div>
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['monthly_payment_label']); ?></div>
-                        <div class="result-value" id="monthly-payment" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>4,221.57</div>
-                    </div>
+                    <button type="button" class="quote-btn primary-cta">
+                        <span class="btn-text"><?php echo esc_html($atts['quote_button_text']); ?></span>
+                        <span class="btn-arrow">→</span>
+                    </button>
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['monthly_interest_label']); ?></div>
-                        <div class="result-value" id="monthly-interest" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>54.91</div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['total_interest_label']); ?></div>
-                        <div class="result-value" id="total-interest" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>1,317.78</div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['loan_length_label']); ?></div>
-                        <div class="result-value" id="loan-length" aria-live="polite">24 months</div>
-                    </div>
-
-                    <div class="result-item total">
-                        <div class="result-label"><?php echo esc_html($atts['total_cost_label']); ?></div>
-                        <div class="result-value" id="total-cost" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>101,317.78</div>
-                    </div>
-
-                    <button type="button" class="quote-btn"><?php echo esc_html($atts['quote_button_text']); ?></button>
+                    <p class="results-disclaimer">Representative example. Actual rates may vary.</p>
                 </div>
             </div>
         </div>
