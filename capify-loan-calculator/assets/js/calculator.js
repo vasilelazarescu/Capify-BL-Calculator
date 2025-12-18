@@ -13,8 +13,10 @@
         constructor() {
             this.monthlyTurnover = 10000;
             this.loanDuration = 24;
-            this.factorRate = 1.26;
-            this.turnoverMultiplier = 1.24; // How much can borrow based on turnover
+            this.borrowFactor = 1.26; // Factor rate
+            this.grossPercentageSum = 0.0517; // Percentage of turnover (5.17%)
+            this.loanCapActive = 1; // Enable loan cap
+            this.borrowLoanCap = 500000; // Maximum loan amount cap
             this.currencySymbol = '£';
 
             this.init();
@@ -121,26 +123,54 @@
 
 
         /**
-         * Calculate loan details based on turnover
+         * Calculate loan details based on turnover (matching original formula)
          */
         calculateLoan() {
-            // Calculate eligible loan amount based on monthly turnover
-            const eligibleAmount = Math.round(this.monthlyTurnover * this.turnoverMultiplier);
+            const turnover = this.monthlyTurnover;
+            const borrowTerm = this.loanDuration;
 
-            // Calculate total repayment using factor rate
-            const totalRepayment = Math.round(eligibleAmount * this.factorRate);
+            // Calculate gross percentage (monthly repayment amount)
+            const grossPercentage = turnover * this.grossPercentageSum;
 
-            // Calculate total cost (interest)
-            const totalCost = totalRepayment - eligibleAmount;
+            // Calculate total repayment (gross result)
+            let grossResult = grossPercentage * borrowTerm;
 
-            // Calculate monthly repayment
-            const monthlyRepayment = Math.round(totalRepayment / this.loanDuration);
+            // Apply loan cap to total repayment if active
+            if (this.loanCapActive === 1) {
+                const grossCap = this.borrowLoanCap * this.borrowFactor;
+                if (grossResult >= grossCap) {
+                    grossResult = grossCap;
+                }
+            }
 
-            // Calculate daily repayment (assuming 20 business days per month)
-            const dailyRepayment = Math.round(monthlyRepayment / 20);
+            // Calculate eligible amount (total result)
+            let totalResult = (grossPercentage * borrowTerm) / this.borrowFactor;
+
+            // Apply loan cap to eligible amount if active
+            if (this.loanCapActive === 1) {
+                const totalCap = (this.borrowLoanCap * this.borrowFactor) / this.borrowFactor;
+                if (totalResult >= totalCap) {
+                    totalResult = totalCap;
+                }
+            }
+
+            // Calculate total cost of loan
+            const costResult = parseInt(grossResult) - parseInt(totalResult);
+
+            // Calculate monthly repayments
+            const monthlyResult = grossResult / borrowTerm;
+
+            // Calculate daily repayments (20 business days per month)
+            const dailyResult = grossResult / (20 * borrowTerm);
 
             // Update the display
-            this.updateResults(eligibleAmount, dailyRepayment, monthlyRepayment, totalCost, totalRepayment);
+            this.updateResults(
+                parseInt(totalResult),    // Eligible amount
+                parseInt(dailyResult),    // Daily repayment
+                parseInt(monthlyResult),  // Monthly repayment
+                parseInt(costResult),     // Total cost
+                parseInt(grossResult)     // Total repayment
+            );
         }
 
         /**
