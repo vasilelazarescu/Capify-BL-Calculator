@@ -11,9 +11,10 @@
      */
     class LoanCalculator {
         constructor() {
-            this.loanAmount = 100000;
-            this.interestRate = 1.26;
+            this.monthlyTurnover = 10000;
             this.loanDuration = 24;
+            this.factorRate = 1.26;
+            this.turnoverMultiplier = 1.24; // How much can borrow based on turnover
             this.currencySymbol = '£';
 
             this.init();
@@ -34,12 +35,19 @@
          * Initialize range sliders
          */
         initializeSliders() {
-            if (this.$loanAmountSlider.length) {
-                this.updateSliderProgress(this.$loanAmountSlider);
+            if (this.$turnoverSlider && this.$turnoverSlider.length) {
+                this.updateSliderProgress(this.$turnoverSlider);
             }
-            if (this.$interestRateSlider.length) {
-                this.updateSliderProgress(this.$interestRateSlider);
+            if (this.$durationSlider && this.$durationSlider.length) {
+                this.updateSliderProgress(this.$durationSlider);
             }
+        }
+
+        /**
+         * Format inputs
+         */
+        formatInputs() {
+            // No text inputs to format anymore
         }
 
         /**
@@ -47,24 +55,25 @@
          */
         cacheDOMElements() {
             // Sliders
-            this.$loanAmountSlider = $('#loan-amount-slider');
-            this.$interestRateSlider = $('#interest-rate-slider');
+            this.$turnoverSlider = $('#turnover-slider');
             this.$durationSlider = $('#duration-slider');
 
             // Value displays
-            this.$amountValue = $('#amount-value');
-            this.$rateValue = $('#rate-value');
+            this.$turnoverValue = $('#turnover-value');
             this.$durationValue = $('#duration-value');
 
             // Results elements
+            this.$eligibleAmount = $('#eligible-amount');
+            this.$dailyPayment = $('#daily-payment');
             this.$monthlyPayment = $('#monthly-payment');
-            this.$totalInterest = $('#total-interest');
-            this.$loanLength = $('#loan-length');
             this.$totalCost = $('#total-cost');
-            this.$loanPrincipal = $('#loan-principal');
+            this.$totalRepayment = $('#total-repayment');
+
+            // Calculate button
+            this.$calculateButton = $('#calculate-btn');
 
             // Get currency symbol from first result element
-            const firstResult = this.$monthlyPayment.text();
+            const firstResult = this.$eligibleAmount.text();
             const match = firstResult.match(/^[£$€]/);
             if (match) {
                 this.currencySymbol = match[0];
@@ -77,25 +86,13 @@
         bindEvents() {
             const self = this;
 
-            // Loan amount slider
-            if (this.$loanAmountSlider.length) {
-                this.$loanAmountSlider.on('input', function() {
+            // Turnover slider
+            if (this.$turnoverSlider.length) {
+                this.$turnoverSlider.on('input', function() {
                     const value = parseInt($(this).val());
-                    self.loanAmount = value;
-                    self.$amountValue.text(value.toLocaleString());
+                    self.monthlyTurnover = value;
+                    self.$turnoverValue.text(value.toLocaleString());
                     self.updateSliderProgress($(this));
-                    self.calculateLoan();
-                });
-            }
-
-            // Interest rate slider
-            if (this.$interestRateSlider.length) {
-                this.$interestRateSlider.on('input', function() {
-                    const value = parseFloat($(this).val());
-                    self.interestRate = value;
-                    self.$rateValue.text(value.toFixed(2));
-                    self.updateSliderProgress($(this));
-                    self.calculateLoan();
                 });
             }
 
@@ -106,6 +103,17 @@
                     self.loanDuration = value;
                     self.$durationValue.text(value);
                     self.updateSliderProgress($(this));
+                });
+            }
+
+            // Calculate button
+            if (this.$calculateButton.length) {
+                this.$calculateButton.on('click', function(e) {
+                    e.preventDefault();
+                    $(this).addClass('btn-clicked');
+                    setTimeout(function() {
+                        self.$calculateButton.removeClass('btn-clicked');
+                    }, 200);
                     self.calculateLoan();
                 });
             }
@@ -113,60 +121,45 @@
 
 
         /**
-         * Calculate loan details
+         * Calculate loan details based on turnover
          */
         calculateLoan() {
-            // Get current values
-            const principal = this.loanAmount;
-            const annualRate = this.interestRate / 100;
-            const months = this.loanDuration;
+            // Calculate eligible loan amount based on monthly turnover
+            const eligibleAmount = Math.round(this.monthlyTurnover * this.turnoverMultiplier);
 
-            // Calculate monthly interest rate
-            const monthlyRate = annualRate / 12;
+            // Calculate total repayment using factor rate
+            const totalRepayment = Math.round(eligibleAmount * this.factorRate);
 
-            // Calculate monthly payment using loan payment formula
-            // M = P * [r(1+r)^n] / [(1+r)^n - 1]
-            let monthlyPayment;
+            // Calculate total cost (interest)
+            const totalCost = totalRepayment - eligibleAmount;
 
-            if (monthlyRate === 0) {
-                // If interest rate is 0, simple division
-                monthlyPayment = principal / months;
-            } else {
-                const x = Math.pow(1 + monthlyRate, months);
-                monthlyPayment = principal * (monthlyRate * x) / (x - 1);
-            }
+            // Calculate monthly repayment
+            const monthlyRepayment = Math.round(totalRepayment / this.loanDuration);
 
-            // Calculate total payment and interest
-            const totalPayment = monthlyPayment * months;
-            const totalInterest = totalPayment - principal;
-
-            // Calculate average monthly interest
-            const monthlyInterest = totalInterest / months;
+            // Calculate daily repayment (assuming 20 business days per month)
+            const dailyRepayment = Math.round(monthlyRepayment / 20);
 
             // Update the display
-            this.updateResults(monthlyPayment, monthlyInterest, totalInterest, totalPayment, months);
+            this.updateResults(eligibleAmount, dailyRepayment, monthlyRepayment, totalCost, totalRepayment);
         }
 
         /**
          * Update result displays
          */
-        updateResults(monthlyPayment, monthlyInterest, totalInterest, totalPayment, months) {
+        updateResults(eligibleAmount, dailyRepayment, monthlyRepayment, totalCost, totalRepayment) {
             // Add animation class
-            $('.highlight-value, .breakdown-value').addClass('updated');
+            $('.eligible-amount, .breakdown-value').addClass('updated');
 
             // Update values
-            this.$monthlyPayment.text(this.formatCurrency(monthlyPayment));
-            this.$totalInterest.text(this.formatCurrency(totalInterest));
-            this.$loanLength.text(months + ' months');
-            this.$totalCost.text(this.formatCurrency(totalPayment));
-
-            if (this.$loanPrincipal) {
-                this.$loanPrincipal.text(this.formatCurrency(this.loanAmount));
-            }
+            this.$eligibleAmount.text(this.formatCurrency(eligibleAmount));
+            this.$dailyPayment.text(this.formatCurrency(dailyRepayment));
+            this.$monthlyPayment.text(this.formatCurrency(monthlyRepayment));
+            this.$totalCost.text(this.formatCurrency(totalCost));
+            this.$totalRepayment.text(this.formatCurrency(totalRepayment));
 
             // Remove animation class after animation completes
             setTimeout(function() {
-                $('.highlight-value, .breakdown-value').removeClass('updated');
+                $('.eligible-amount, .breakdown-value').removeClass('updated');
             }, 400);
         }
 
