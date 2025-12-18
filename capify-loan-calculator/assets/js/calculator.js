@@ -26,7 +26,20 @@
             this.cacheDOMElements();
             this.bindEvents();
             this.formatInputs();
+            this.initializeSliders();
             this.calculateLoan();
+        }
+
+        /**
+         * Initialize range sliders
+         */
+        initializeSliders() {
+            if (this.$loanAmountSlider.length) {
+                this.updateSliderProgress(this.$loanAmountSlider);
+            }
+            if (this.$interestRateSlider.length) {
+                this.updateSliderProgress(this.$interestRateSlider);
+            }
         }
 
         /**
@@ -34,7 +47,9 @@
          */
         cacheDOMElements() {
             this.$loanAmountInput = $('#loan-amount');
+            this.$loanAmountSlider = $('#loan-amount-slider');
             this.$interestRateInput = $('#interest-rate');
+            this.$interestRateSlider = $('#interest-rate-slider');
             this.$durationButtons = $('.duration-btn');
             this.$calculateButton = $('#calculate-btn');
 
@@ -44,6 +59,12 @@
             this.$totalInterest = $('#total-interest');
             this.$loanLength = $('#loan-length');
             this.$totalCost = $('#total-cost');
+
+            // Visual breakdown elements
+            this.$principalBar = $('#principal-bar');
+            this.$interestBar = $('#interest-bar');
+            this.$principalAmount = $('#principal-amount');
+            this.$interestAmount = $('#interest-amount');
 
             // Get currency symbol from first result element
             const firstResult = this.$monthlyPayment.text();
@@ -59,36 +80,75 @@
         bindEvents() {
             const self = this;
 
-            // Input changes
+            // Loan amount input changes
             this.$loanAmountInput.on('input', function() {
                 self.handleLoanAmountChange($(this));
+                self.syncSliderFromInput('amount');
+                self.calculateLoan();
             });
 
             this.$loanAmountInput.on('blur', function() {
                 self.formatLoanAmount($(this));
             });
 
-            this.$interestRateInput.on('input', function() {
-                self.handleInterestRateChange($(this));
+            this.$loanAmountInput.on('focus', function() {
+                $(this).parent().addClass('input-focused');
             });
 
-            // Duration button clicks
+            this.$loanAmountInput.on('blur', function() {
+                $(this).parent().removeClass('input-focused');
+            });
+
+            // Loan amount slider
+            if (this.$loanAmountSlider.length) {
+                this.$loanAmountSlider.on('input', function() {
+                    self.handleSliderChange('amount', $(this).val());
+                });
+            }
+
+            // Interest rate input changes
+            this.$interestRateInput.on('input', function() {
+                self.handleInterestRateChange($(this));
+                self.syncSliderFromInput('rate');
+                self.calculateLoan();
+            });
+
+            this.$interestRateInput.on('focus', function() {
+                $(this).parent().addClass('input-focused');
+            });
+
+            this.$interestRateInput.on('blur', function() {
+                $(this).parent().removeClass('input-focused');
+            });
+
+            // Interest rate slider
+            if (this.$interestRateSlider.length) {
+                this.$interestRateSlider.on('input', function() {
+                    self.handleSliderChange('rate', $(this).val());
+                });
+            }
+
+            // Duration button clicks with haptic feedback
             this.$durationButtons.on('click', function() {
                 self.handleDurationChange($(this));
             });
 
             // Calculate button click
-            this.$calculateButton.on('click', function() {
+            this.$calculateButton.on('click', function(e) {
+                e.preventDefault();
+                $(this).addClass('btn-clicked');
+                setTimeout(function() {
+                    self.$calculateButton.removeClass('btn-clicked');
+                }, 200);
                 self.calculateLoan();
             });
 
-            // Real-time calculation on input changes
-            this.$loanAmountInput.on('input', function() {
-                self.calculateLoan();
-            });
-
-            this.$interestRateInput.on('input', function() {
-                self.calculateLoan();
+            // Keyboard accessibility
+            this.$durationButtons.on('keypress', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).click();
+                }
             });
         }
 
@@ -152,8 +212,9 @@
          * Handle duration change
          */
         handleDurationChange($button) {
-            this.$durationButtons.removeClass('active');
-            $button.addClass('active');
+            // Update active state and ARIA attributes
+            this.$durationButtons.removeClass('active').attr('aria-pressed', 'false');
+            $button.addClass('active').attr('aria-pressed', 'true');
             this.loanDuration = parseInt($button.data('months'));
             this.calculateLoan();
         }
@@ -207,6 +268,9 @@
             this.$loanLength.text(months + ' months');
             this.$totalCost.text(this.formatCurrency(totalPayment));
 
+            // Update visual breakdown chart
+            this.updateVisualBreakdown(this.loanAmount, totalInterest);
+
             // Remove animation class after animation completes
             setTimeout(function() {
                 $('.result-value').removeClass('updated');
@@ -237,19 +301,83 @@
 
             if (this.loanAmount <= 0 || isNaN(this.loanAmount)) {
                 isValid = false;
-                this.$loanAmountInput.css('border-color', '#f44336');
+                this.$loanAmountInput.parent().addClass('input-error');
             } else {
-                this.$loanAmountInput.css('border-color', '#e0e0e0');
+                this.$loanAmountInput.parent().removeClass('input-error');
             }
 
             if (this.interestRate < 0 || isNaN(this.interestRate)) {
                 isValid = false;
-                this.$interestRateInput.css('border-color', '#f44336');
+                this.$interestRateInput.parent().addClass('input-error');
             } else {
-                this.$interestRateInput.css('border-color', '#e0e0e0');
+                this.$interestRateInput.parent().removeClass('input-error');
             }
 
             return isValid;
+        }
+
+        /**
+         * Handle slider change
+         */
+        handleSliderChange(type, value) {
+            if (type === 'amount') {
+                this.loanAmount = parseInt(value);
+                this.$loanAmountInput.val(this.loanAmount.toLocaleString());
+            } else if (type === 'rate') {
+                this.interestRate = parseFloat(value);
+                this.$interestRateInput.val(this.interestRate);
+            }
+            this.calculateLoan();
+        }
+
+        /**
+         * Sync slider from input
+         */
+        syncSliderFromInput(type) {
+            if (type === 'amount' && this.$loanAmountSlider.length) {
+                this.$loanAmountSlider.val(this.loanAmount);
+                this.updateSliderProgress(this.$loanAmountSlider);
+            } else if (type === 'rate' && this.$interestRateSlider.length) {
+                this.$interestRateSlider.val(this.interestRate);
+                this.updateSliderProgress(this.$interestRateSlider);
+            }
+        }
+
+        /**
+         * Update slider progress/fill
+         */
+        updateSliderProgress($slider) {
+            if (!$slider.length) return;
+
+            const min = parseFloat($slider.attr('min')) || 0;
+            const max = parseFloat($slider.attr('max')) || 100;
+            const value = parseFloat($slider.val());
+            const percentage = ((value - min) / (max - min)) * 100;
+
+            $slider.css('background', `linear-gradient(to right, #7c3aed 0%, #7c3aed ${percentage}%, #e0e0e0 ${percentage}%, #e0e0e0 100%)`);
+        }
+
+        /**
+         * Update visual breakdown chart
+         */
+        updateVisualBreakdown(principal, totalInterest) {
+            if (!this.$principalBar || !this.$interestBar) return;
+
+            const total = principal + totalInterest;
+            const principalPercentage = (principal / total) * 100;
+            const interestPercentage = (totalInterest / total) * 100;
+
+            // Update bar widths with animation
+            this.$principalBar.css('width', principalPercentage + '%');
+            this.$interestBar.css('width', interestPercentage + '%');
+
+            // Update amounts if elements exist
+            if (this.$principalAmount) {
+                this.$principalAmount.text(this.formatCurrency(principal));
+            }
+            if (this.$interestAmount) {
+                this.$interestAmount.text(this.formatCurrency(totalInterest));
+            }
         }
     }
 
