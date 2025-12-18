@@ -11,13 +11,19 @@
      */
     class LoanCalculator {
         constructor() {
-            this.monthlyTurnover = 10000;
-            this.loanDuration = 24;
-            this.borrowFactor = 1.26; // Factor rate
-            this.grossPercentageSum = 0.0517; // Percentage of turnover (5.17%)
+            // Get configuration from data attributes
+            const $wrapper = $('.capify-loan-calculator-wrapper');
+
+            // Read settings from data attributes with fallback defaults
+            this.borrowFactor = parseFloat($wrapper.data('borrow-factor')) || 1.26;
+            this.grossPercentageSum = parseFloat($wrapper.data('gross-percentage')) || 0.13;
+            this.borrowLoanCap = parseFloat($wrapper.data('loan-cap')) || 500000;
+            this.currencySymbol = $wrapper.data('currency') || '£';
             this.loanCapActive = 1; // Enable loan cap
-            this.borrowLoanCap = 500000; // Maximum loan amount cap
-            this.currencySymbol = '£';
+
+            // Initialize from slider values
+            this.monthlyTurnover = parseInt($('#turnover-slider').val()) || 10000;
+            this.loanDuration = parseInt($('#duration-slider').val()) || 24;
 
             this.init();
         }
@@ -73,13 +79,6 @@
 
             // Calculate button
             this.$calculateButton = $('#calculate-btn');
-
-            // Get currency symbol from first result element
-            const firstResult = this.$eligibleAmount.text();
-            const match = firstResult.match(/^[£$€]/);
-            if (match) {
-                this.currencySymbol = match[0];
-            }
         }
 
         /**

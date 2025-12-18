@@ -49,38 +49,130 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
      */
     protected function register_controls() {
 
-        // Content Section - Calculator Settings
+        // Content Section - Borrow Form
         $this->start_controls_section(
-            'calculator_settings_section',
+            'borrow_form_section',
             [
-                'label' => __('Calculator Settings', 'capify-loan-calculator'),
+                'label' => __('Borrow Form', 'capify-loan-calculator'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
         $this->add_control(
-            'default_amount',
+            'borrow_form_intro',
             [
-                'label' => __('Default Loan Amount', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::NUMBER,
-                'default' => 100000,
-                'min' => 1000,
-                'max' => 10000000,
-                'step' => 1000,
-                'description' => __('The default loan amount displayed in the calculator', 'capify-loan-calculator'),
+                'label' => __('Borrow Form Intro', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::TEXTAREA,
+                'default' => 'Get an estimate of how much you might be able to borrow in under a minute.',
+                'description' => __('Intro above the borrow forms', 'capify-loan-calculator'),
             ]
         );
 
         $this->add_control(
-            'default_rate',
+            'borrow_business_intro',
             [
-                'label' => __('Default Interest Rate (%)', 'capify-loan-calculator'),
+                'label' => __('Borrow Business Intro', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'How long do you want to lend over?',
+                'description' => __('Intro above the business slider', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_turnover_intro',
+            [
+                'label' => __('Borrow Turnover Intro', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'What is your monthly average turnover?',
+                'description' => __('Intro above the turnover slider', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_months_min',
+            [
+                'label' => __('Borrow Months Min', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 3,
+                'min' => 1,
+                'max' => 100,
+                'step' => 1,
+                'description' => __('Minimum slider value', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_months_maximum',
+            [
+                'label' => __('Borrow Months Maximum', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 12,
+                'min' => 1,
+                'max' => 100,
+                'step' => 1,
+                'description' => __('Maximum slider value', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_turnover_min',
+            [
+                'label' => __('Borrow Turnover Min', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 10000,
+                'min' => 0,
+                'step' => 1000,
+                'description' => __('Minimum slider value. No commas please', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_turnover_maximum',
+            [
+                'label' => __('Borrow Turnover Maximum', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 500000,
+                'min' => 0,
+                'step' => 1000,
+                'description' => __('Maximum slider value. No commas please', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'loan_cap',
+            [
+                'label' => __('Loan Cap', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 500000,
+                'min' => 0,
+                'step' => 1000,
+                'description' => __('Maximum loan value one can be quoted for. No commas please', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'borrow_factor',
+            [
+                'label' => __('Borrow Factor', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 1.26,
                 'min' => 0.01,
-                'max' => 100,
+                'max' => 10,
                 'step' => 0.01,
-                'description' => __('The default annual interest rate', 'capify-loan-calculator'),
+                'description' => __('Factor (divided by turnover * borrow_term)', 'capify-loan-calculator'),
+            ]
+        );
+
+        $this->add_control(
+            'gross_percentage',
+            [
+                'label' => __('Gross Percentage', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 0.13,
+                'min' => 0,
+                'max' => 1,
+                'step' => 0.001,
+                'description' => __('Calculate Montly Repayments', 'capify-loan-calculator'),
             ]
         );
 
@@ -88,16 +180,11 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             'default_duration',
             [
                 'label' => __('Default Loan Duration (months)', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => '24',
-                'options' => [
-                    '12' => __('12 months', 'capify-loan-calculator'),
-                    '24' => __('24 months', 'capify-loan-calculator'),
-                    '36' => __('36 months', 'capify-loan-calculator'),
-                    '48' => __('48 months', 'capify-loan-calculator'),
-                    '60' => __('60 months', 'capify-loan-calculator'),
-                    '72' => __('72 months', 'capify-loan-calculator'),
-                ],
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 24,
+                'min' => 1,
+                'max' => 100,
+                'step' => 1,
                 'description' => __('The default loan duration', 'capify-loan-calculator'),
             ]
         );
@@ -505,11 +592,19 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
 
         // Build shortcode attributes
         $atts = array(
-            'default_amount' => $settings['default_amount'],
-            'default_rate' => $settings['default_rate'],
-            'default_duration' => $settings['default_duration'],
-            'currency_symbol' => $settings['currency_symbol'],
-            'show_trustpilot' => $settings['show_trustpilot'],
+            'borrow_form_intro' => isset($settings['borrow_form_intro']) ? $settings['borrow_form_intro'] : 'Get an estimate of how much you might be able to borrow in under a minute.',
+            'borrow_business_intro' => isset($settings['borrow_business_intro']) ? $settings['borrow_business_intro'] : 'How long do you want to lend over?',
+            'borrow_turnover_intro' => isset($settings['borrow_turnover_intro']) ? $settings['borrow_turnover_intro'] : 'What is your monthly average turnover?',
+            'borrow_months_min' => isset($settings['borrow_months_min']) ? $settings['borrow_months_min'] : 3,
+            'borrow_months_maximum' => isset($settings['borrow_months_maximum']) ? $settings['borrow_months_maximum'] : 12,
+            'borrow_turnover_min' => isset($settings['borrow_turnover_min']) ? $settings['borrow_turnover_min'] : 10000,
+            'borrow_turnover_maximum' => isset($settings['borrow_turnover_maximum']) ? $settings['borrow_turnover_maximum'] : 500000,
+            'loan_cap' => isset($settings['loan_cap']) ? $settings['loan_cap'] : 500000,
+            'borrow_factor' => isset($settings['borrow_factor']) ? $settings['borrow_factor'] : 1.26,
+            'gross_percentage' => isset($settings['gross_percentage']) ? $settings['gross_percentage'] : 0.13,
+            'default_duration' => isset($settings['default_duration']) ? $settings['default_duration'] : 24,
+            'currency_symbol' => isset($settings['currency_symbol']) ? $settings['currency_symbol'] : '£',
+            'show_trustpilot' => isset($settings['show_trustpilot']) ? $settings['show_trustpilot'] : 'yes',
             'show_header' => isset($settings['show_header']) ? $settings['show_header'] : 'yes',
             'header_title' => isset($settings['header_title']) ? $settings['header_title'] : 'Business Loan Calculator',
             'show_intro' => isset($settings['show_intro']) ? $settings['show_intro'] : 'yes',

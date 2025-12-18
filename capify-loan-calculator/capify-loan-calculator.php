@@ -79,8 +79,16 @@ class Capify_Loan_Calculator {
     public function render_calculator($atts) {
         // Parse attributes
         $atts = shortcode_atts(array(
-            'default_amount' => '100000',
-            'default_rate' => '1.26',
+            'borrow_form_intro' => 'Get an estimate of how much you might be able to borrow in under a minute.',
+            'borrow_business_intro' => 'How long do you want to lend over?',
+            'borrow_turnover_intro' => 'What is your monthly average turnover?',
+            'borrow_months_min' => '3',
+            'borrow_months_maximum' => '12',
+            'borrow_turnover_min' => '10000',
+            'borrow_turnover_maximum' => '500000',
+            'loan_cap' => '500000',
+            'borrow_factor' => '1.26',
+            'gross_percentage' => '0.13',
             'default_duration' => '24',
             'currency_symbol' => '£',
             'show_trustpilot' => 'yes',
@@ -107,7 +115,11 @@ class Capify_Loan_Calculator {
 
         ob_start();
         ?>
-        <div class="capify-loan-calculator-wrapper">
+        <div class="capify-loan-calculator-wrapper"
+             data-borrow-factor="<?php echo esc_attr($atts['borrow_factor']); ?>"
+             data-gross-percentage="<?php echo esc_attr($atts['gross_percentage']); ?>"
+             data-loan-cap="<?php echo esc_attr($atts['loan_cap']); ?>"
+             data-currency="<?php echo esc_attr($atts['currency_symbol']); ?>">
             <?php if ($atts['show_header'] === 'yes'): ?>
             <div class="calculator-header">
                 <h1><?php echo esc_html($atts['header_title']); ?></h1>
@@ -126,6 +138,12 @@ class Capify_Loan_Calculator {
             </div>
             <?php endif; ?>
 
+            <?php if (!empty($atts['borrow_form_intro'])): ?>
+            <div class="borrow-form-intro">
+                <p><?php echo esc_html($atts['borrow_form_intro']); ?></p>
+            </div>
+            <?php endif; ?>
+
             <div class="calculator-container">
                 <div class="calculator-left">
                     <div class="calculator-section-header">
@@ -139,30 +157,40 @@ class Capify_Loan_Calculator {
 
                     <div class="calculator-form">
                         <div class="form-group slider-primary">
-                            <label class="slider-label">How long do you want to borrow over?</label>
+                            <label class="slider-label"><?php echo esc_html($atts['borrow_business_intro']); ?></label>
                             <div class="slider-value-display" id="duration-display">
                                 <span id="duration-value"><?php echo esc_attr($atts['default_duration']); ?></span> months
                             </div>
                             <div class="slider-wrapper">
-                                <input type="range" id="duration-slider" class="range-slider primary" min="12" max="72" step="12" value="<?php echo esc_attr($atts['default_duration']); ?>" aria-label="Loan duration" />
+                                <input type="range" id="duration-slider" class="range-slider primary"
+                                       min="<?php echo esc_attr($atts['borrow_months_min']); ?>"
+                                       max="<?php echo esc_attr($atts['borrow_months_maximum']); ?>"
+                                       step="1"
+                                       value="<?php echo esc_attr($atts['default_duration']); ?>"
+                                       aria-label="Loan duration" />
                             </div>
                             <div class="slider-range-labels">
-                                <span>12 months</span>
-                                <span>72 months</span>
+                                <span><?php echo esc_html($atts['borrow_months_min']); ?> months</span>
+                                <span><?php echo esc_html($atts['borrow_months_maximum']); ?> months</span>
                             </div>
                         </div>
 
                         <div class="form-group slider-primary">
-                            <label class="slider-label">What is your monthly average turnover?</label>
+                            <label class="slider-label"><?php echo esc_html($atts['borrow_turnover_intro']); ?></label>
                             <div class="slider-value-display" id="turnover-display">
-                                <?php echo esc_html($atts['currency_symbol']); ?><span id="turnover-value">10,000</span>
+                                <?php echo esc_html($atts['currency_symbol']); ?><span id="turnover-value"><?php echo number_format($atts['borrow_turnover_min']); ?></span>
                             </div>
                             <div class="slider-wrapper">
-                                <input type="range" id="turnover-slider" class="range-slider primary" min="1000" max="500000" step="1000" value="10000" aria-label="Monthly turnover" />
+                                <input type="range" id="turnover-slider" class="range-slider primary"
+                                       min="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
+                                       max="<?php echo esc_attr($atts['borrow_turnover_maximum']); ?>"
+                                       step="1000"
+                                       value="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
+                                       aria-label="Monthly turnover" />
                             </div>
                             <div class="slider-range-labels">
-                                <span><?php echo esc_html($atts['currency_symbol']); ?>1,000</span>
-                                <span><?php echo esc_html($atts['currency_symbol']); ?>500,000</span>
+                                <span><?php echo esc_html($atts['currency_symbol']); ?><?php echo number_format($atts['borrow_turnover_min']); ?></span>
+                                <span><?php echo esc_html($atts['currency_symbol']); ?><?php echo number_format($atts['borrow_turnover_maximum']); ?></span>
                             </div>
                         </div>
 
