@@ -62,6 +62,33 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'show_header_icon',
+            [
+                'label' => __('Show Header Icon', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => __('Yes', 'capify-loan-calculator'),
+                'label_off' => __('No', 'capify-loan-calculator'),
+                'return_value' => 'yes',
+                'default' => 'no',
+            ]
+        );
+
+        $this->add_control(
+            'header_icon',
+            [
+                'label' => __('Header Icon', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => 'fas fa-calculator',
+                    'library' => 'fa-solid',
+                ],
+                'condition' => [
+                    'show_header_icon' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'header_title',
             [
                 'label' => __('Header Title', 'capify-loan-calculator'),
@@ -403,10 +430,81 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'icon_heading',
+            [
+                'label' => __('Icon', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'condition' => [
+                    'show_header_icon' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'header_icon_size',
+            [
+                'label' => __('Icon Size', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 16,
+                        'max' => 200,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 48,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .header-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .header-icon i' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .header-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'show_header_icon' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'header_icon_color',
+            [
+                'label' => __('Icon Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .header-icon' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .header-icon i' => 'color: {{VALUE}};',
+                    '{{WRAPPER}} .header-icon svg' => 'fill: {{VALUE}};',
+                ],
+                'condition' => [
+                    'show_header_icon' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'header_icon_margin',
+            [
+                'label' => __('Icon Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .header-icon' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'show_header_icon' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'title_heading',
             [
                 'label' => __('Title', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
             ]
         );
 
@@ -1114,6 +1212,8 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
 
         // Build shortcode attributes
         $atts = [
+            'show_header_icon' => $settings['show_header_icon'],
+            'header_icon' => isset($settings['header_icon']) ? $settings['header_icon'] : '',
             'header_title' => $settings['header_title'],
             'header_subtitle' => $settings['header_subtitle'],
             'duration_label' => $settings['duration_label'],

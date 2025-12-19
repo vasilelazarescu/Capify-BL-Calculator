@@ -79,6 +79,8 @@ class Capify_Loan_Calculator {
     public function render_calculator($atts) {
         // Parse attributes
         $atts = shortcode_atts(array(
+            'show_header_icon' => 'no',
+            'header_icon' => '',
             'header_title' => 'Business Loan Calculator',
             'header_subtitle' => 'Get an estimate of how much you might be able to borrow in under a minute.',
             'duration_label' => 'How long do you want to lend over?',
@@ -124,6 +126,11 @@ class Capify_Loan_Calculator {
                 <div class="calculator-left">
                     <!-- Header Section -->
                     <div class="header">
+                        <?php if ($atts['show_header_icon'] === 'yes' && !empty($atts['header_icon'])): ?>
+                            <div class="header-icon">
+                                <?php \Elementor\Icons_Manager::render_icon($atts['header_icon'], ['aria-hidden' => 'true']); ?>
+                            </div>
+                        <?php endif; ?>
                         <h1 class="title"><?php echo esc_html($atts['header_title']); ?></h1>
                         <p class="subtitle"><?php echo esc_html($atts['header_subtitle']); ?></p>
                     </div>

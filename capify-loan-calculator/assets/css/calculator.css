@@ -49,6 +49,19 @@
     margin-bottom: 60px;
 }
 
+.header-icon {
+    font-size: 48px;
+    color: #a6ce39;
+    margin-bottom: 20px;
+    line-height: 1;
+}
+
+.header-icon i,
+.header-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
 .title {
     font-weight: 700;
     font-size: 28px;
