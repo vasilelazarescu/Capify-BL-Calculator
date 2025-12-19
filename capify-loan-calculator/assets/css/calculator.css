@@ -131,6 +131,11 @@
     border-radius: 32px;
 }
 
+/* Remove default base styling */
+.slider-container .noUi-base {
+    position: relative;
+}
+
 /* Handle (thumb) */
 .slider-container .noUi-handle {
     width: 28px;
@@ -143,17 +148,18 @@
     top: 50%;
     transform: translateY(-50%);
     right: -14px;
+    outline: none;
 }
 
-.slider-container .noUi-handle:before,
+/* Hide default pseudo-elements */
 .slider-container .noUi-handle:after {
     display: none;
 }
 
-/* White dot in center of handle */
-.slider-container .noUi-handle::before {
+/* White dot in center of handle - using :before */
+.slider-container .noUi-handle:before {
     content: '';
-    display: block;
+    display: block !important;
     position: absolute;
     width: 12px;
     height: 12px;
@@ -168,6 +174,10 @@
     cursor: grabbing;
 }
 
+.slider-container .noUi-handle:focus {
+    outline: none;
+}
+
 /* Remove default tooltip */
 .slider-container .noUi-tooltip {
     display: none;
@@ -176,6 +186,12 @@
 /* Smooth touch interactions */
 .slider-container .noUi-target {
     touch-action: none;
+}
+
+/* Fix for horizontal slider origin */
+.slider-container .noUi-horizontal .noUi-origin {
+    height: 0;
+    top: 4px;
 }
 
 /* Calculate Button */
