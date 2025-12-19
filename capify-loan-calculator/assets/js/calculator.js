@@ -1,6 +1,6 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 1.0.0
+ * Version: 1.0.3
  */
 
 (function($) {
@@ -21,14 +21,6 @@
             this.borrowLoanCap = parseFloat($wrapper.attr('data-loan-cap')) || 500000;
             this.currencySymbol = $wrapper.attr('data-currency') || '£';
             this.loanCapActive = 1; // Enable loan cap
-
-            // Debug log to verify settings are loaded
-            console.log('Calculator Settings:', {
-                borrowFactor: this.borrowFactor,
-                grossPercentage: this.grossPercentageSum,
-                loanCap: this.borrowLoanCap,
-                currency: this.currencySymbol
-            });
 
             // Initialize from slider values
             this.monthlyTurnover = parseInt($('#turnover-slider').val()) || 10000;
@@ -211,13 +203,13 @@
          * Format number as currency
          */
         formatCurrency(amount) {
-            // Round to 2 decimal places
-            const rounded = Math.round(amount * 100) / 100;
+            // Round to nearest whole number for cleaner display
+            const rounded = Math.round(amount);
 
-            // Format with commas and 2 decimal places
+            // Format with commas, no decimal places for whole numbers
             const formatted = rounded.toLocaleString('en-GB', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
             });
 
             return this.currencySymbol + formatted;
