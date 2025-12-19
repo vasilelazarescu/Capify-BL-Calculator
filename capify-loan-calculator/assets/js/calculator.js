@@ -1,6 +1,7 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 1.0.4
+ * Version: 1.0.5
+ * Based on HTML-Capify-BL-Calculator repository design
  */
 
 (function($) {
@@ -226,7 +227,7 @@
             const value = parseFloat($slider.val());
             const percentage = ((value - min) / (max - min)) * 100;
 
-            $slider.css('background', `linear-gradient(to right, #a3e635 0%, #a3e635 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`);
+            $slider.css('background', `linear-gradient(to right, #a6ce39 0%, #a6ce39 ${percentage}%, #f5f7f8 ${percentage}%, #f5f7f8 100%)`);
         }
     }
 

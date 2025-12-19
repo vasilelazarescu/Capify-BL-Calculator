@@ -60,7 +60,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '1.0.4'
+            '1.0.5'
         );
 
         // Enqueue JavaScript
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.4',
+            '1.0.5',
             true
         );
     }

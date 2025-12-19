@@ -1,17 +1,21 @@
 /**
  * Capify Business Loan Calculator Styles
- * Version: 1.0.4
+ * Version: 1.0.5
+ * Based on HTML-Capify-BL-Calculator repository design
  */
+
+/* Import Poppins font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 /* Calculator Wrapper */
 .capify-loan-calculator-wrapper {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     max-width: 1200px;
     margin: 0 auto;
     padding: 40px 20px;
-    color: #1e293b;
-    line-height: 1.6;
-    background: #f1f5f9;
+    color: #333;
+    line-height: 1.65;
+    background: #f5f7f8;
 }
 
 /* Header */
@@ -24,11 +28,12 @@
 }
 
 .calculator-header h1 {
-    font-size: 2.5rem;
+    font-size: 28px;
     font-weight: 700;
-    color: #0c4a6e;
-    margin: 0;
+    color: #0b3558;
+    margin: 0 0 12px 0;
     text-shadow: none;
+    line-height: 1.5;
 }
 
 /* Trustpilot Badge */
@@ -85,18 +90,17 @@
 
 /* Calculator Container */
 .calculator-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    position: relative;
     background: #fff;
-    padding: 60px;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 40px 56px;
+    border-radius: 24px;
+    border-bottom: 1px solid #edf1f2;
+    min-height: 526px;
 }
 
 /* Left Section */
 .calculator-left {
-    padding-right: 20px;
+    max-width: 496px;
 }
 
 .calculator-section-header {
@@ -153,25 +157,24 @@
 
 .slider-label {
     display: block;
-    font-size: 1rem;
-    font-weight: 400;
-    color: #475569;
-    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    line-height: 1.65;
     text-transform: none;
 }
 
 .slider-value-display {
-    font-size: 2rem;
+    font-size: 20px;
     font-weight: 700;
-    color: #0369a1;
-    margin-bottom: 25px;
-    line-height: 1.2;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #0b3558;
+    margin-bottom: 20px;
+    line-height: 1.65;
 }
 
 .slider-value-display:hover {
-    transform: scale(1.02);
-    text-shadow: 0 2px 8px rgba(3, 105, 161, 0.2);
+    color: #0b3558;
 }
 
 .slider-wrapper {
@@ -260,58 +263,61 @@
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
+    max-width: 464px;
     height: 8px;
-    border-radius: 5px;
-    background: linear-gradient(to right, #a3e635 0%, #a3e635 50%, #e5e7eb 50%, #e5e7eb 100%);
+    border-radius: 32px;
+    background: linear-gradient(to right, #a6ce39 0%, #a6ce39 50%, #f5f7f8 50%, #f5f7f8 100%);
     outline: none;
-    transition: all 0.2s;
     cursor: pointer;
 }
 
 .range-slider:hover {
-    height: 10px;
+    opacity: 0.9;
 }
 
 .range-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: #fff;
-    border: 3px solid #a3e635;
+    background: #a6ce39;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(163, 230, 53, 0.3);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+    position: relative;
+    border: 8px solid #a6ce39;
+    background-clip: padding-box;
 }
 
 .range-slider::-webkit-slider-thumb:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(163, 230, 53, 0.5);
+    background: #95ba2f;
+    border-color: #95ba2f;
 }
 
 .range-slider::-webkit-slider-thumb:active {
-    transform: scale(1.05);
+    background: #95ba2f;
+    border-color: #95ba2f;
 }
 
 .range-slider::-moz-range-thumb {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
-    background: #fff;
-    border: 3px solid #a3e635;
+    background: #a6ce39;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(163, 230, 53, 0.3);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+    border: 8px solid #a6ce39;
+    background-clip: padding-box;
 }
 
 .range-slider::-moz-range-thumb:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(163, 230, 53, 0.5);
+    background: #95ba2f;
+    border-color: #95ba2f;
 }
 
 .range-slider::-moz-range-thumb:active {
-    transform: scale(1.05);
+    background: #95ba2f;
+    border-color: #95ba2f;
 }
 
 /* Tooltip for Help Text */
@@ -392,50 +398,29 @@
 
 /* Calculate Button */
 .calculate-btn {
-    width: auto;
-    padding: 16px 60px;
-    background: #a3e635;
-    color: #1e293b;
-    border: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
+    background-color: #a6ce39;
+    color: #0b3558;
+    font-family: 'Poppins', sans-serif;
     font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.08px;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 32px;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 30px;
-    box-shadow: 0 4px 12px rgba(163, 230, 53, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.calculate-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.calculate-btn:hover::before {
-    width: 300px;
-    height: 300px;
+    min-width: 181px;
+    height: 56px;
+    margin-top: 8px;
+    transition: background-color 0.3s ease;
 }
 
 .calculate-btn:hover {
-    transform: translateY(-2px);
-    background: #bef264;
-    box-shadow: 0 6px 20px rgba(163, 230, 53, 0.4);
+    background-color: #95ba2f;
 }
 
 .calculate-btn:active,
 .calculate-btn.btn-clicked {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(163, 230, 53, 0.3);
+    background-color: #95ba2f;
 }
 
 /* Disclaimer */
@@ -449,11 +434,17 @@
 
 /* Right Section - Results */
 .calculator-right {
-    background: #f8fafc;
-    padding: 50px 40px;
+    position: absolute;
+    right: 56px;
+    top: 24px;
+    width: 560px;
+    background-color: #f5f7f8;
+    border: 1px solid #edf1f2;
     border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    box-shadow: none;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .results-header {
@@ -479,56 +470,63 @@
 /* Congratulations Message */
 .congratulations-message {
     background: transparent;
-    color: #1e293b;
-    padding: 0 0 30px 0;
-    border-radius: 0;
     text-align: center;
-    margin-bottom: 30px;
-    box-shadow: none;
-    animation: none;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #edf1f2;
+    margin-bottom: 12px;
 }
 
 .congratulations-message h2 {
-    font-size: 1.75rem;
+    font-size: 20px;
     font-weight: 700;
-    margin: 0 0 15px 0;
-    color: #0369a1;
+    line-height: 1.65;
+    color: #0b3558;
+    margin: 0 0 7px 0;
 }
 
 .congrats-text {
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: 400;
-    margin: 0 0 20px 0;
-    color: #64748b;
+    line-height: 1.65;
+    color: #333;
+    margin: 0 0 7px 0;
 }
 
 .eligible-amount {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1.2;
-    margin: 15px 0 20px 0;
-    color: #0369a1;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #0b3558;
+    margin: 0 0 7px 0;
 }
 
 .congrats-disclaimer {
-    font-size: 0.75rem;
+    font-size: 13px;
     font-weight: 400;
-    margin: 15px 0 0 0;
-    color: #94a3b8;
-    font-style: italic;
+    line-height: 16px;
+    color: #626d7c;
+    margin: 0;
+    font-style: normal;
 }
 
 /* Repayment Breakdown */
 .repayment-breakdown {
-    margin-bottom: 40px;
+    margin-bottom: 12px;
 }
 
 .repayment-breakdown h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.65;
+    color: #333;
     text-align: center;
+    margin-bottom: 12px;
+}
+
+/* Horizontal Grid Layout */
+.repayment-breakdown > .breakdown-row:not(.total-row) {
+    display: inline-flex;
+    width: auto;
 }
 
 .breakdown-row {
@@ -536,39 +534,49 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 0;
+    padding: 0 16px;
     border-bottom: none;
-    margin-bottom: 25px;
+    border-left: 1px solid #edf1f2;
+}
+
+.breakdown-row:first-child {
+    border-left: none;
+    padding-left: 0;
 }
 
 .breakdown-row:last-child {
-    border-bottom: none;
+    padding-right: 0;
 }
 
 .breakdown-row.total-row {
-    margin-top: 20px;
-    padding-top: 25px;
-    border-top: 1px solid #e5e7eb;
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px 0 0 0;
+    border-top: 1px solid #edf1f2;
+    border-left: none;
     border-bottom: none;
 }
 
 .breakdown-label {
-    font-size: 0.9rem;
-    color: #64748b;
+    font-size: 13px;
     font-weight: 400;
-    margin-bottom: 8px;
-    display: block;
+    line-height: 16px;
+    color: #626d7c;
+    margin-bottom: 4px;
+    white-space: nowrap;
 }
 
 .breakdown-value {
-    font-size: 1.5rem;
+    font-size: 20px;
     font-weight: 700;
-    color: #0369a1;
+    line-height: 1.65;
+    color: #0b3558;
+    white-space: nowrap;
 }
 
 .breakdown-value.total {
-    font-size: 1.75rem;
-    color: #0369a1;
+    font-size: 20px;
+    color: #0b3558;
 }
 
 .result-item {
@@ -776,18 +784,29 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+    .calculator-container {
+        padding: 40px 32px;
+    }
+
+    .calculator-right {
+        position: static;
+        width: 100%;
+        margin-top: 40px;
+    }
+}
+
 @media (max-width: 968px) {
     .calculator-container {
-        grid-template-columns: 1fr;
         padding: 30px 20px;
     }
 
     .calculator-left {
-        padding-right: 0;
+        max-width: 100%;
     }
 
     .calculator-header h1 {
-        font-size: 2rem;
+        font-size: 24px;
     }
 
     .duration-buttons {
