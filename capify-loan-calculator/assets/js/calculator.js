@@ -1,6 +1,6 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 2.0.4
+ * Version: 2.1.0
  */
 
 (function($) {
@@ -19,12 +19,15 @@
             // Duration slider config
             this.minDuration = parseInt($wrapper.attr('data-min-duration')) || 3;
             this.maxDuration = parseInt($wrapper.attr('data-max-duration')) || 12;
-            this.currentDuration = 6; // Default
+            this.currentDuration = this.minDuration; // Start with minimum
 
             // Turnover slider config
             this.minTurnover = parseInt($wrapper.attr('data-min-turnover')) || 10000;
             this.maxTurnover = parseInt($wrapper.attr('data-max-turnover')) || 500000;
-            this.currentTurnover = 110000; // Default
+            this.currentTurnover = this.minTurnover; // Start with minimum
+
+            // Track if user has interacted
+            this.hasInteracted = false;
 
             // DOM elements
             this.$durationDisplay = $wrapper.find('#duration-display');
@@ -37,7 +40,8 @@
             this.$turnoverThumb = $wrapper.find('#turnover-thumb');
             this.$turnoverContainer = $wrapper.find('#turnover-slider-container');
 
-            this.$calculateBtn = $wrapper.find('#calculate-btn');
+            this.$emptyState = $wrapper.find('#empty-state');
+            this.$resultsContent = $wrapper.find('#results-content');
 
             this.$loanAmount = $wrapper.find('#loan-amount');
             this.$dailyPayment = $wrapper.find('#daily-payment');
@@ -51,10 +55,19 @@
         init() {
             this.setupDurationSlider();
             this.setupTurnoverSlider();
-            this.setupCalculateButton();
 
-            // Calculate initial values
-            this.calculateLoan();
+            // Show empty state initially
+            this.showEmptyState();
+        }
+
+        showEmptyState() {
+            this.$emptyState.show();
+            this.$resultsContent.hide();
+        }
+
+        showResults() {
+            this.$emptyState.hide();
+            this.$resultsContent.show();
         }
 
         setupDurationSlider() {
@@ -119,6 +132,13 @@
 
             this.currentDuration = value;
             this.updateDurationSlider(value);
+
+            // Show results on first interaction
+            if (!this.hasInteracted) {
+                this.hasInteracted = true;
+                this.showResults();
+            }
+
             this.calculateLoan();
         }
 
@@ -194,6 +214,13 @@
 
             this.currentTurnover = value;
             this.updateTurnoverSlider(value);
+
+            // Show results on first interaction
+            if (!this.hasInteracted) {
+                this.hasInteracted = true;
+                this.showResults();
+            }
+
             this.calculateLoan();
         }
 
@@ -204,13 +231,6 @@
             this.$turnoverProgress.css('width', percentage + '%');
             this.$turnoverThumb.css('left', 'calc(' + percentage + '% - 14px)');
             this.$turnoverDisplay.text(this.currencySymbol + ' ' + this.formatNumber(value));
-        }
-
-        setupCalculateButton() {
-            const self = this;
-            this.$calculateBtn.on('click', function() {
-                self.calculateLoan();
-            });
         }
 
         calculateLoan() {

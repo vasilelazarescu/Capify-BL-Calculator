@@ -1,7 +1,7 @@
 /**
  * Capify Business Loan Calculator Styles
- * Version: 2.0.4
- * Production ready with dividers
+ * Version: 2.1.0
+ * Production ready with empty state
  */
 
 /* Import Poppins font */
@@ -161,9 +161,51 @@
     top: 24px;
     width: 560px;
     background-color: #f5f7f8;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     border: 1px solid #edf1f2;
     border-radius: 12px;
     padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 300px;
+    padding: 40px 20px;
+}
+
+.empty-state-icon {
+    margin-bottom: 24px;
+    opacity: 0.6;
+}
+
+.empty-state-title {
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.5;
+    color: #0b3558;
+    margin-bottom: 12px;
+}
+
+.empty-state-subtitle {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.65;
+    color: #626d7c;
+    max-width: 360px;
+}
+
+/* Results Content */
+.results-content {
     display: flex;
     flex-direction: column;
     gap: 12px;

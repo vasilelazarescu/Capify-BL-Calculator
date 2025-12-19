@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 2.0.4
+ * Version: 2.1.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -60,7 +60,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '2.0.4'
+            '2.1.0'
         );
 
         // Enqueue JavaScript
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '2.0.4',
+            '2.1.0',
             true
         );
     }
@@ -87,13 +87,12 @@ class Capify_Loan_Calculator {
             'borrow_months_maximum' => '12',
             'borrow_turnover_min' => '10000',
             'borrow_turnover_maximum' => '500000',
-            'default_duration' => '6',
-            'default_turnover' => '110000',
+            'default_duration' => '3',
+            'default_turnover' => '10000',
             'loan_cap' => '500000',
             'borrow_factor' => '1.26',
             'gross_percentage' => '0.13',
             'currency_symbol' => '£',
-            'calculate_button_text' => 'Calculate',
             'results_title' => 'Congratulations!',
             'results_subtitle' => 'You may be eligible for a loan amount up to:',
             'disclaimer_text' => '* Subject to Capify\'s standard credit assessment criterial terms & conditions',
@@ -102,6 +101,8 @@ class Capify_Loan_Calculator {
             'monthly_repayment_label' => 'Monthly repayments:',
             'total_cost_label' => 'Total Cost of Loan:',
             'total_repayment_label' => 'Total Repayment:',
+            'empty_state_title' => 'Your estimate will appear here',
+            'empty_state_subtitle' => 'Move the sliders to get your instant loan estimate',
         ), $atts);
 
         ob_start();
@@ -145,44 +146,59 @@ class Capify_Loan_Calculator {
                     </div>
                 </div>
 
-                <!-- Calculate Button -->
-                <button type="button" class="calculate-btn" id="calculate-btn"><?php echo esc_html($atts['calculate_button_text']); ?></button>
-
                 <!-- Results Panel -->
                 <div class="results-panel">
-                    <div class="results-header">
-                        <h2 class="results-title"><?php echo esc_html($atts['results_title']); ?></h2>
-                        <p class="results-subtitle"><?php echo esc_html($atts['results_subtitle']); ?></p>
-                        <p class="loan-amount" id="loan-amount"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
-                        <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
+                    <!-- Empty State -->
+                    <div class="empty-state" id="empty-state">
+                        <div class="empty-state-icon">
+                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>
+                                <rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>
+                                <rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>
+                                <rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>
+                                <rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>
+                            </svg>
+                        </div>
+                        <h2 class="empty-state-title"><?php echo esc_html($atts['empty_state_title']); ?></h2>
+                        <p class="empty-state-subtitle"><?php echo esc_html($atts['empty_state_subtitle']); ?></p>
                     </div>
 
-                    <div class="divider"></div>
-
-                    <p class="section-label"><?php echo esc_html($atts['repayment_section_label']); ?></p>
-
-                    <div class="repayment-grid">
-                        <div class="repayment-item">
-                            <p class="repayment-label"><?php echo esc_html($atts['daily_repayment_label']); ?></p>
-                            <p class="repayment-value" id="daily-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                    <!-- Results Content -->
+                    <div class="results-content" id="results-content" style="display: none;">
+                        <div class="results-header">
+                            <h2 class="results-title"><?php echo esc_html($atts['results_title']); ?></h2>
+                            <p class="results-subtitle"><?php echo esc_html($atts['results_subtitle']); ?></p>
+                            <p class="loan-amount" id="loan-amount"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
                         </div>
-                        <div class="vertical-divider"></div>
-                        <div class="repayment-item">
-                            <p class="repayment-label"><?php echo esc_html($atts['monthly_repayment_label']); ?></p>
-                            <p class="repayment-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
-                        </div>
-                        <div class="vertical-divider"></div>
-                        <div class="repayment-item">
-                            <p class="repayment-label"><?php echo esc_html($atts['total_cost_label']); ?></p>
-                            <p class="repayment-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
-                        </div>
-                    </div>
 
-                    <div class="divider"></div>
+                        <div class="divider"></div>
 
-                    <div class="total-section">
-                        <p class="total-label"><?php echo esc_html($atts['total_repayment_label']); ?></p>
-                        <p class="total-value" id="total-repayment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                        <p class="section-label"><?php echo esc_html($atts['repayment_section_label']); ?></p>
+
+                        <div class="repayment-grid">
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['daily_repayment_label']); ?></p>
+                                <p class="repayment-value" id="daily-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                            <div class="vertical-divider"></div>
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['monthly_repayment_label']); ?></p>
+                                <p class="repayment-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                            <div class="vertical-divider"></div>
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['total_cost_label']); ?></p>
+                                <p class="repayment-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="total-section">
+                            <p class="total-label"><?php echo esc_html($atts['total_repayment_label']); ?></p>
+                            <p class="total-value" id="total-repayment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                        </div>
                     </div>
                 </div>
             </div>

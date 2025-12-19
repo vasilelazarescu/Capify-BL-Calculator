@@ -1,7 +1,7 @@
 <?php
 /**
  * Capify Loan Calculator Elementor Widget
- * Version: 2.0.4
+ * Version: 2.1.0
  */
 
 if (!defined('ABSPATH')) {
@@ -184,6 +184,24 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Currency Symbol', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::TEXT,
                 'default' => '£',
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_title',
+            [
+                'label' => __('Empty State Title', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'Your estimate will appear here',
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_subtitle',
+            [
+                'label' => __('Empty State Subtitle', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => 'Move the sliders to get your instant loan estimate',
             ]
         );
 
@@ -709,6 +727,17 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'results_background_image',
+            [
+                'label' => __('Background Image', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'selectors' => [
+                    '{{WRAPPER}} .results-panel' => 'background-image: url("{{URL}}");',
+                ],
+            ]
+        );
+
         $this->add_responsive_control(
             'results_padding',
             [
@@ -921,6 +950,8 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             'total_cost_label' => $settings['total_cost_label'],
             'total_repayment_label' => $settings['total_repayment_label'],
             'currency_symbol' => $settings['currency_symbol'],
+            'empty_state_title' => $settings['empty_state_title'],
+            'empty_state_subtitle' => $settings['empty_state_subtitle'],
             'borrow_months_min' => $settings['borrow_months_min'],
             'borrow_months_maximum' => $settings['borrow_months_maximum'],
             'default_duration' => $settings['default_duration'],
