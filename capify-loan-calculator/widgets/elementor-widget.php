@@ -232,7 +232,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Default Duration (months)', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::NUMBER,
-                'default' => 6,
+                'default' => 3,
                 'min' => 1,
             ]
         );
@@ -264,7 +264,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             [
                 'label' => __('Default Turnover', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::NUMBER,
-                'default' => 110000,
+                'default' => 10000,
                 'min' => 0,
                 'step' => 1000,
             ]
@@ -325,6 +325,29 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'size_units' => ['px', '%', 'em'],
                 'selectors' => [
                     '{{WRAPPER}} .calculator-card' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'card_gap',
+            [
+                'label' => __('Column Gap', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 40,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .calculator-card' => 'gap: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );

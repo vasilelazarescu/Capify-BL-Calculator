@@ -34,12 +34,14 @@
 
 /* Left Column - Inputs */
 .calculator-left {
-    /* No additional padding */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Right Column - Results */
 .calculator-right {
-    /* No additional padding */
+    display: flex;
+    flex-direction: column;
 }
 
 /* Header Section */
