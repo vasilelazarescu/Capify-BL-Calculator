@@ -1,7 +1,7 @@
 /**
  * Capify Business Loan Calculator Styles
- * Version: 2.0.0
- * Based on HTML-Capify-BL-Calculator repository
+ * Version: 2.0.1
+ * Matches screenshot design exactly
  */
 
 /* Import Poppins font */
@@ -211,19 +211,21 @@
 }
 
 .section-label {
-    font-weight: 600;
+    font-weight: 700;
     font-size: 16px;
     line-height: 1.65;
     color: #333;
     text-align: center;
+    margin-bottom: 16px;
 }
 
 /* Repayment Grid */
 .repayment-grid {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
-    height: 49px;
+    justify-content: space-around;
+    gap: 20px;
+    margin: 20px 0;
 }
 
 .repayment-item {
@@ -239,7 +241,7 @@
     font-size: 13px;
     line-height: 16px;
     color: #626d7c;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .repayment-value {
@@ -250,15 +252,12 @@
     white-space: nowrap;
 }
 
-.vertical-divider {
-    width: 1px;
-    height: 100%;
-    background-color: #edf1f2;
-}
-
 /* Total Section */
 .total-section {
     text-align: center;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid #edf1f2;
 }
 
 .total-label {
@@ -266,7 +265,7 @@
     font-size: 16px;
     line-height: 1.65;
     color: #333;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .total-value {
@@ -304,12 +303,7 @@
 
     .repayment-grid {
         flex-direction: column;
-        height: auto;
         gap: 20px;
-    }
-
-    .vertical-divider {
-        display: none;
     }
 
     .results-panel {
