@@ -402,6 +402,7 @@
         flex-direction: column;
         height: auto;
         gap: 20px;
+        align-items: center;
     }
 
     .vertical-divider {

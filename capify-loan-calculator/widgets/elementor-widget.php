@@ -1007,6 +1007,30 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_responsive_control(
+            'repayment_grid_gap',
+            [
+                'label' => __('Values Gap', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 16,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .repayment-grid' => 'gap: {{SIZE}}{{UNIT}};',
+                ],
+                'separator' => 'before',
+            ]
+        );
+
         $this->end_controls_section();
 
         // Empty State Style
