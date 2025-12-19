@@ -357,9 +357,9 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_responsive_control(
-            'card_gap',
+            'column_spacing',
             [
-                'label' => __('Column Gap', 'capify-loan-calculator'),
+                'label' => __('Column Spacing', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px'],
                 'range' => [
@@ -371,10 +371,11 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 ],
                 'default' => [
                     'unit' => 'px',
-                    'size' => 40,
+                    'size' => 20,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .calculator-card' => 'gap: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .calculator-left' => 'padding-right: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .calculator-right' => 'padding-left: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
