@@ -156,22 +156,14 @@ class Capify_Loan_Calculator {
                     <div class="input-section">
                         <label class="input-label"><?php echo esc_html($atts['duration_label']); ?></label>
                         <p class="input-value" id="duration-display"><?php echo esc_attr($atts['default_duration']); ?> months</p>
-                        <div class="slider-container" id="duration-slider-container">
-                            <div class="slider-track"></div>
-                            <div class="slider-progress" id="duration-progress"></div>
-                            <div class="slider-thumb" id="duration-thumb"></div>
-                        </div>
+                        <div class="slider-container" id="duration-slider-container"></div>
                     </div>
 
                     <!-- Monthly Turnover Section -->
                     <div class="input-section">
                         <label class="input-label"><?php echo esc_html($atts['turnover_label']); ?></label>
                         <p class="input-value" id="turnover-display"><?php echo esc_html($atts['currency_symbol']); ?> <?php echo number_format($atts['default_turnover']); ?></p>
-                        <div class="slider-container" id="turnover-slider-container">
-                            <div class="slider-track"></div>
-                            <div class="slider-progress" id="turnover-progress"></div>
-                            <div class="slider-thumb" id="turnover-thumb"></div>
-                        </div>
+                        <div class="slider-container" id="turnover-slider-container"></div>
                     </div>
                 </div>
 

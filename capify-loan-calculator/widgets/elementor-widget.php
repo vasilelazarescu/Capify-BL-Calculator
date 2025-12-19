@@ -673,7 +673,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Track Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-track' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-target' => 'background-color: {{VALUE}};',
                 ],
             ]
         );
@@ -684,7 +684,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Progress Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-progress' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-connect' => 'background-color: {{VALUE}};',
                 ],
             ]
         );
@@ -695,7 +695,40 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Thumb Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-thumb' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_spacing_heading',
+            [
+                'label' => __('Spacing', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_track_margin',
+            [
+                'label' => __('Track Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-target' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_container_padding',
+            [
+                'label' => __('Container Padding', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
