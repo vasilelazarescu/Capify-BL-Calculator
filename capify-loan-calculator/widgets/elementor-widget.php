@@ -921,6 +921,62 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'results_subtitle_heading',
+            [
+                'label' => __('Subtitle', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'results_subtitle_typography',
+                'selector' => '{{WRAPPER}} .results-subtitle',
+            ]
+        );
+
+        $this->add_control(
+            'results_subtitle_color',
+            [
+                'label' => __('Subtitle Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .results-subtitle' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'disclaimer_heading',
+            [
+                'label' => __('Disclaimer', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'disclaimer_typography',
+                'selector' => '{{WRAPPER}} .disclaimer',
+            ]
+        );
+
+        $this->add_control(
+            'disclaimer_color',
+            [
+                'label' => __('Disclaimer Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .disclaimer' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'divider_heading',
             [
                 'label' => __('Dividers', 'capify-loan-calculator'),
