@@ -98,15 +98,6 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
-            'calculate_button_text',
-            [
-                'label' => __('Calculate Button Text', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => 'Calculate',
-            ]
-        );
-
-        $this->add_control(
             'results_title',
             [
                 'label' => __('Results Title', 'capify-loan-calculator'),
@@ -589,124 +580,6 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
 
         $this->end_controls_section();
 
-        // Button Style
-        $this->start_controls_section(
-            'button_style_section',
-            [
-                'label' => __('Calculate Button', 'capify-loan-calculator'),
-                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Typography::get_type(),
-            [
-                'name' => 'button_typography',
-                'selector' => '{{WRAPPER}} .calculate-btn',
-            ]
-        );
-
-        $this->start_controls_tabs('button_tabs');
-
-        $this->start_controls_tab(
-            'button_normal_tab',
-            [
-                'label' => __('Normal', 'capify-loan-calculator'),
-            ]
-        );
-
-        $this->add_control(
-            'button_color',
-            [
-                'label' => __('Text Color', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'button_background',
-            [
-                'label' => __('Background Color', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->start_controls_tab(
-            'button_hover_tab',
-            [
-                'label' => __('Hover', 'capify-loan-calculator'),
-            ]
-        );
-
-        $this->add_control(
-            'button_hover_color',
-            [
-                'label' => __('Text Color', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn:hover' => 'color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->add_control(
-            'button_hover_background',
-            [
-                'label' => __('Background Color', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::COLOR,
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn:hover' => 'background-color: {{VALUE}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_tab();
-
-        $this->end_controls_tabs();
-
-        $this->add_responsive_control(
-            'button_padding',
-            [
-                'label' => __('Padding', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_group_control(
-            \Elementor\Group_Control_Border::get_type(),
-            [
-                'name' => 'button_border',
-                'selector' => '{{WRAPPER}} .calculate-btn',
-            ]
-        );
-
-        $this->add_control(
-            'button_border_radius',
-            [
-                'label' => __('Border Radius', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%'],
-                'selectors' => [
-                    '{{WRAPPER}} .calculate-btn' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->end_controls_section();
-
         // Results Panel Style
         $this->start_controls_section(
             'results_style_section',
@@ -734,6 +607,93 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::MEDIA,
                 'selectors' => [
                     '{{WRAPPER}} .results-panel' => 'background-image: url("{{URL}}");',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'results_background_position',
+            [
+                'label' => __('Background Position', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'center center',
+                'options' => [
+                    'center center' => __('Center Center', 'capify-loan-calculator'),
+                    'center left' => __('Center Left', 'capify-loan-calculator'),
+                    'center right' => __('Center Right', 'capify-loan-calculator'),
+                    'top center' => __('Top Center', 'capify-loan-calculator'),
+                    'top left' => __('Top Left', 'capify-loan-calculator'),
+                    'top right' => __('Top Right', 'capify-loan-calculator'),
+                    'bottom center' => __('Bottom Center', 'capify-loan-calculator'),
+                    'bottom left' => __('Bottom Left', 'capify-loan-calculator'),
+                    'bottom right' => __('Bottom Right', 'capify-loan-calculator'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .results-panel' => 'background-position: {{VALUE}};',
+                ],
+                'condition' => [
+                    'results_background_image[url]!' => '',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'results_background_size',
+            [
+                'label' => __('Background Size', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'cover',
+                'options' => [
+                    'cover' => __('Cover', 'capify-loan-calculator'),
+                    'contain' => __('Contain', 'capify-loan-calculator'),
+                    'auto' => __('Auto', 'capify-loan-calculator'),
+                    '100% 100%' => __('100% 100%', 'capify-loan-calculator'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .results-panel' => 'background-size: {{VALUE}};',
+                ],
+                'condition' => [
+                    'results_background_image[url]!' => '',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'results_background_repeat',
+            [
+                'label' => __('Background Repeat', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'no-repeat',
+                'options' => [
+                    'no-repeat' => __('No Repeat', 'capify-loan-calculator'),
+                    'repeat' => __('Repeat', 'capify-loan-calculator'),
+                    'repeat-x' => __('Repeat X', 'capify-loan-calculator'),
+                    'repeat-y' => __('Repeat Y', 'capify-loan-calculator'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .results-panel' => 'background-repeat: {{VALUE}};',
+                ],
+                'condition' => [
+                    'results_background_image[url]!' => '',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'results_background_attachment',
+            [
+                'label' => __('Background Attachment', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'scroll',
+                'options' => [
+                    'scroll' => __('Scroll', 'capify-loan-calculator'),
+                    'fixed' => __('Fixed', 'capify-loan-calculator'),
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .results-panel' => 'background-attachment: {{VALUE}};',
+                ],
+                'condition' => [
+                    'results_background_image[url]!' => '',
                 ],
             ]
         );
@@ -926,6 +886,188 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
         );
 
         $this->end_controls_section();
+
+        // Empty State Style
+        $this->start_controls_section(
+            'empty_state_style_section',
+            [
+                'label' => __('Empty State', 'capify-loan-calculator'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_custom_icon',
+            [
+                'label' => __('Custom Icon/Image', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'default' => [
+                    'url' => '',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'empty_state_icon_size',
+            [
+                'label' => __('Icon Size', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 40,
+                        'max' => 300,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 120,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-icon svg' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .empty-state-icon img' => 'width: {{SIZE}}{{UNIT}}; height: auto;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_icon_opacity',
+            [
+                'label' => __('Icon Opacity', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1,
+                        'step' => 0.1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 0.6,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-icon' => 'opacity: {{SIZE}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'empty_state_padding',
+            [
+                'label' => __('Padding', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'empty_state_min_height',
+            [
+                'label' => __('Min Height', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 100,
+                        'max' => 800,
+                        'step' => 10,
+                    ],
+                ],
+                'default' => [
+                    'unit' => 'px',
+                    'size' => 300,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state' => 'min-height: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_title_heading',
+            [
+                'label' => __('Title', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'empty_state_title_typography',
+                'selector' => '{{WRAPPER}} .empty-state-title',
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_title_color',
+            [
+                'label' => __('Title Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-title' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'empty_state_title_margin',
+            [
+                'label' => __('Title Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-title' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_subtitle_heading',
+            [
+                'label' => __('Subtitle', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'empty_state_subtitle_typography',
+                'selector' => '{{WRAPPER}} .empty-state-subtitle',
+            ]
+        );
+
+        $this->add_control(
+            'empty_state_subtitle_color',
+            [
+                'label' => __('Subtitle Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-subtitle' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'empty_state_subtitle_margin',
+            [
+                'label' => __('Subtitle Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .empty-state-subtitle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
     }
 
     /**
@@ -940,7 +1082,6 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             'header_subtitle' => $settings['header_subtitle'],
             'duration_label' => $settings['duration_label'],
             'turnover_label' => $settings['turnover_label'],
-            'calculate_button_text' => $settings['calculate_button_text'],
             'results_title' => $settings['results_title'],
             'results_subtitle' => $settings['results_subtitle'],
             'disclaimer_text' => $settings['disclaimer_text'],
@@ -952,6 +1093,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             'currency_symbol' => $settings['currency_symbol'],
             'empty_state_title' => $settings['empty_state_title'],
             'empty_state_subtitle' => $settings['empty_state_subtitle'],
+            'empty_state_custom_icon' => isset($settings['empty_state_custom_icon']['url']) ? $settings['empty_state_custom_icon']['url'] : '',
             'borrow_months_min' => $settings['borrow_months_min'],
             'borrow_months_maximum' => $settings['borrow_months_maximum'],
             'default_duration' => $settings['default_duration'],

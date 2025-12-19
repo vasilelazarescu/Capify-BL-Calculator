@@ -103,6 +103,7 @@ class Capify_Loan_Calculator {
             'total_repayment_label' => 'Total Repayment:',
             'empty_state_title' => 'Your estimate will appear here',
             'empty_state_subtitle' => 'Move the sliders to get your instant loan estimate',
+            'empty_state_custom_icon' => '',
         ), $atts);
 
         ob_start();
@@ -151,13 +152,17 @@ class Capify_Loan_Calculator {
                     <!-- Empty State -->
                     <div class="empty-state" id="empty-state">
                         <div class="empty-state-icon">
-                            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>
-                                <rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>
-                                <rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>
-                                <rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>
-                                <rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>
-                            </svg>
+                            <?php if (!empty($atts['empty_state_custom_icon'])): ?>
+                                <img src="<?php echo esc_url($atts['empty_state_custom_icon']); ?>" alt="<?php echo esc_attr($atts['empty_state_title']); ?>" />
+                            <?php else: ?>
+                                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>
+                                    <rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>
+                                    <rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>
+                                    <rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>
+                                    <rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>
+                                </svg>
+                            <?php endif; ?>
                         </div>
                         <h2 class="empty-state-title"><?php echo esc_html($atts['empty_state_title']); ?></h2>
                         <p class="empty-state-subtitle"><?php echo esc_html($atts['empty_state_subtitle']); ?></p>
