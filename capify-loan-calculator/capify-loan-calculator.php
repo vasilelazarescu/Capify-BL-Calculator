@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -60,7 +60,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '1.0.6'
+            '2.0.0'
         );
 
         // Enqueue JavaScript
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.6',
+            '2.0.0',
             true
         );
     }
@@ -79,38 +79,29 @@ class Capify_Loan_Calculator {
     public function render_calculator($atts) {
         // Parse attributes
         $atts = shortcode_atts(array(
-            'borrow_form_intro' => 'Get an estimate of how much you might be able to borrow in under a minute.',
-            'borrow_business_intro' => 'How long do you want to lend over?',
-            'borrow_turnover_intro' => 'What is your monthly average turnover?',
+            'header_title' => 'Business Loan Calculator',
+            'header_subtitle' => 'Get an estimate of how much you might be able to borrow in under a minute.',
+            'duration_label' => 'How long do you want to lend over?',
+            'turnover_label' => 'What is your monthly average turnover?',
             'borrow_months_min' => '3',
             'borrow_months_maximum' => '12',
             'borrow_turnover_min' => '10000',
             'borrow_turnover_maximum' => '500000',
+            'default_duration' => '6',
+            'default_turnover' => '110000',
             'loan_cap' => '500000',
             'borrow_factor' => '1.26',
             'gross_percentage' => '0.13',
-            'default_duration' => '24',
             'currency_symbol' => '£',
-            'show_trustpilot' => 'yes',
-            'show_header' => 'yes',
-            'header_title' => 'Business Loan Calculator',
-            'show_intro' => 'yes',
-            'intro_text' => 'Use our SME Business Loan Calculator below to find out how much you can borrow to take your business to the next level.',
-            'section_title' => 'Want to understand the cost of your loan?',
-            'section_description' => 'Use our business loan calculator below to find out how much you can borrow to take your business to the next level.',
-            'amount_label' => 'Loan amount',
-            'rate_label' => 'Annual interest rate',
-            'rate_help_text' => 'Interest rates vary depending on the lender. Use 10% if you\'re unsure',
-            'duration_label' => 'Loan duration',
             'calculate_button_text' => 'Calculate',
-            'quote_button_text' => 'Get a quote',
-            'disclaimer_text' => 'Calculations are indicative only and intended as a guide only. The figures calculated are not a statement of the actual repayments that will be charged on any actual loan and do not constitute a loan offer.',
-            'results_title' => 'Your estimate',
-            'monthly_payment_label' => 'Monthly payments',
-            'monthly_interest_label' => 'Monthly interest',
-            'total_interest_label' => 'Total interest',
-            'loan_length_label' => 'Length of loan',
-            'total_cost_label' => 'Total cost of loan',
+            'results_title' => 'Congratulations!',
+            'results_subtitle' => 'You may be eligible for a loan amount up to:',
+            'disclaimer_text' => '* Subject to Capify\'s standard credit assessment criterial terms & conditions',
+            'repayment_section_label' => 'Your Repayment:',
+            'daily_repayment_label' => 'Daily repayments:',
+            'monthly_repayment_label' => 'Monthly repayments:',
+            'total_cost_label' => 'Total Cost of Loan:',
+            'total_repayment_label' => 'Total Repayment:',
         ), $atts);
 
         ob_start();
@@ -119,120 +110,80 @@ class Capify_Loan_Calculator {
              data-borrow-factor="<?php echo esc_attr($atts['borrow_factor']); ?>"
              data-gross-percentage="<?php echo esc_attr($atts['gross_percentage']); ?>"
              data-loan-cap="<?php echo esc_attr($atts['loan_cap']); ?>"
-             data-currency="<?php echo esc_attr($atts['currency_symbol']); ?>">
-            <?php if ($atts['show_header'] === 'yes'): ?>
-            <div class="calculator-header">
-                <h1><?php echo esc_html($atts['header_title']); ?></h1>
-                <?php if ($atts['show_trustpilot'] === 'yes'): ?>
-                <div class="trustpilot-badge">
-                    <div class="trustpilot-stars">★★★★★</div>
-                    <div class="trustpilot-text">TrustScore 4.8 | 1,334 reviews</div>
-                </div>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
+             data-currency="<?php echo esc_attr($atts['currency_symbol']); ?>"
+             data-min-duration="<?php echo esc_attr($atts['borrow_months_min']); ?>"
+             data-max-duration="<?php echo esc_attr($atts['borrow_months_maximum']); ?>"
+             data-min-turnover="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
+             data-max-turnover="<?php echo esc_attr($atts['borrow_turnover_maximum']); ?>">
 
-            <?php if ($atts['show_intro'] === 'yes' && !empty($atts['intro_text'])): ?>
-            <div class="calculator-intro">
-                <p><?php echo esc_html($atts['intro_text']); ?></p>
-            </div>
-            <?php endif; ?>
-
-            <?php if (!empty($atts['borrow_form_intro'])): ?>
-            <div class="borrow-form-intro">
-                <p><?php echo esc_html($atts['borrow_form_intro']); ?></p>
-            </div>
-            <?php endif; ?>
-
-            <div class="calculator-container">
-                <div class="calculator-left">
-                    <div class="calculator-form">
-                        <div class="form-group slider-primary">
-                            <label class="slider-label"><?php echo esc_html($atts['borrow_business_intro']); ?></label>
-                            <div class="slider-value-display" id="duration-display">
-                                <span id="duration-value"><?php echo esc_attr($atts['default_duration']); ?></span> months
-                            </div>
-                            <div class="slider-wrapper">
-                                <input type="range" id="duration-slider" class="range-slider primary"
-                                       min="<?php echo esc_attr($atts['borrow_months_min']); ?>"
-                                       max="<?php echo esc_attr($atts['borrow_months_maximum']); ?>"
-                                       step="1"
-                                       value="<?php echo esc_attr($atts['default_duration']); ?>"
-                                       aria-label="Loan duration" />
-                            </div>
-                            <div class="slider-range-labels">
-                                <span><?php echo esc_html($atts['borrow_months_min']); ?> months</span>
-                                <span><?php echo esc_html($atts['borrow_months_maximum']); ?> months</span>
-                            </div>
-                        </div>
-
-                        <div class="form-group slider-primary">
-                            <label class="slider-label"><?php echo esc_html($atts['borrow_turnover_intro']); ?></label>
-                            <div class="slider-value-display" id="turnover-display">
-                                <?php echo esc_html($atts['currency_symbol']); ?><span id="turnover-value"><?php echo number_format($atts['borrow_turnover_min']); ?></span>
-                            </div>
-                            <div class="slider-wrapper">
-                                <input type="range" id="turnover-slider" class="range-slider primary"
-                                       min="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
-                                       max="<?php echo esc_attr($atts['borrow_turnover_maximum']); ?>"
-                                       step="1000"
-                                       value="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
-                                       aria-label="Monthly turnover" />
-                            </div>
-                            <div class="slider-range-labels">
-                                <span><?php echo esc_html($atts['currency_symbol']); ?><?php echo number_format($atts['borrow_turnover_min']); ?></span>
-                                <span><?php echo esc_html($atts['currency_symbol']); ?><?php echo number_format($atts['borrow_turnover_maximum']); ?></span>
-                            </div>
-                        </div>
-
-                        <button type="button" id="calculate-btn" class="calculate-btn">Calculate</button>
-                    </div>
-
-                    <?php if (!empty($atts['disclaimer_text'])): ?>
-                    <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
-                    <?php endif; ?>
+            <div class="calculator-card">
+                <!-- Header Section -->
+                <div class="header">
+                    <h1 class="title"><?php echo esc_html($atts['header_title']); ?></h1>
+                    <p class="subtitle"><?php echo esc_html($atts['header_subtitle']); ?></p>
                 </div>
 
-                <div class="calculator-right">
-                    <div class="congratulations-message" id="congrats-message">
-                        <h2>Congratulations!</h2>
-                        <p class="congrats-text">You may be eligible for a loan amount up to</p>
-                        <div class="eligible-amount" id="eligible-amount" aria-live="polite">
-                            <?php echo esc_html($atts['currency_symbol']); ?>12,380
-                        </div>
-                        <p class="congrats-disclaimer">* Subject to Capify's standard credit assessment criteria terms & conditions</p>
+                <!-- Loan Duration Section -->
+                <div class="input-section">
+                    <label class="input-label"><?php echo esc_html($atts['duration_label']); ?></label>
+                    <p class="input-value" id="duration-display"><?php echo esc_attr($atts['default_duration']); ?> months</p>
+                    <div class="slider-container" id="duration-slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-progress" id="duration-progress"></div>
+                        <div class="slider-thumb" id="duration-thumb"></div>
+                    </div>
+                </div>
+
+                <!-- Monthly Turnover Section -->
+                <div class="input-section">
+                    <label class="input-label"><?php echo esc_html($atts['turnover_label']); ?></label>
+                    <p class="input-value" id="turnover-display"><?php echo esc_html($atts['currency_symbol']); ?> <?php echo number_format($atts['default_turnover']); ?></p>
+                    <div class="slider-container" id="turnover-slider-container">
+                        <div class="slider-track"></div>
+                        <div class="slider-progress" id="turnover-progress"></div>
+                        <div class="slider-thumb" id="turnover-thumb"></div>
+                    </div>
+                </div>
+
+                <!-- Calculate Button -->
+                <button type="button" class="calculate-btn" id="calculate-btn"><?php echo esc_html($atts['calculate_button_text']); ?></button>
+
+                <!-- Results Panel -->
+                <div class="results-panel">
+                    <div class="results-header">
+                        <h2 class="results-title"><?php echo esc_html($atts['results_title']); ?></h2>
+                        <p class="results-subtitle"><?php echo esc_html($atts['results_subtitle']); ?></p>
+                        <p class="loan-amount" id="loan-amount"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                        <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
                     </div>
 
-                    <div class="repayment-breakdown">
-                        <h3>Your Repayment</h3>
+                    <div class="divider"></div>
 
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">Daily repayments:</span>
-                            <span class="breakdown-value" id="daily-payment" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>65</span>
+                    <p class="section-label"><?php echo esc_html($atts['repayment_section_label']); ?></p>
+
+                    <div class="repayment-grid">
+                        <div class="repayment-item">
+                            <p class="repayment-label"><?php echo esc_html($atts['daily_repayment_label']); ?></p>
+                            <p class="repayment-value" id="daily-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
-
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">Monthly repayments:</span>
-                            <span class="breakdown-value" id="monthly-payment" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>1,300</span>
+                        <div class="vertical-divider"></div>
+                        <div class="repayment-item">
+                            <p class="repayment-label"><?php echo esc_html($atts['monthly_repayment_label']); ?></p>
+                            <p class="repayment-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
-
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">Total Cost of Loan:</span>
-                            <span class="breakdown-value" id="total-cost" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>3,220</span>
-                        </div>
-
-                        <div class="breakdown-row total-row">
-                            <span class="breakdown-label">Total Repayment:</span>
-                            <span class="breakdown-value total" id="total-repayment" aria-live="polite"><?php echo esc_html($atts['currency_symbol']); ?>15,600</span>
+                        <div class="vertical-divider"></div>
+                        <div class="repayment-item">
+                            <p class="repayment-label"><?php echo esc_html($atts['total_cost_label']); ?></p>
+                            <p class="repayment-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
                     </div>
 
-                    <button type="button" class="quote-btn primary-cta">
-                        <span class="btn-text">Check eligibility</span>
-                        <span class="btn-arrow">→</span>
-                    </button>
+                    <div class="divider"></div>
 
-                    <p class="results-disclaimer">This calculator is for illustrative purposes only and is based on an example factor rate of 1.26. The factor rate offered to your business may vary based on your circumstances and loan terms. Processing and origination fees may apply. Repayments are collected by Direct Debit, meaning payments are taken on business days only.</p>
+                    <div class="total-section">
+                        <p class="total-label"><?php echo esc_html($atts['total_repayment_label']); ?></p>
+                        <p class="total-value" id="total-repayment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                    </div>
                 </div>
             </div>
         </div>

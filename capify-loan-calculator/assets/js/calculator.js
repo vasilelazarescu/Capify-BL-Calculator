@@ -1,243 +1,262 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 1.0.5
- * Based on HTML-Capify-BL-Calculator repository design
+ * Version: 2.0.0
  */
 
 (function($) {
     'use strict';
 
-    /**
-     * Loan Calculator Class
-     */
-    class LoanCalculator {
-        constructor() {
-            // Get configuration from data attributes
-            const $wrapper = $('.capify-loan-calculator-wrapper');
+    class CapifyLoanCalculator {
+        constructor($wrapper) {
+            this.$wrapper = $wrapper;
 
-            // Read settings from data attributes with fallback defaults
-            // Use attr() and parseFloat to ensure proper decimal reading
+            // Get configuration from data attributes
             this.borrowFactor = parseFloat($wrapper.attr('data-borrow-factor')) || 1.26;
             this.grossPercentageSum = parseFloat($wrapper.attr('data-gross-percentage')) || 0.13;
-            this.borrowLoanCap = parseFloat($wrapper.attr('data-loan-cap')) || 500000;
+            this.loanCap = parseFloat($wrapper.attr('data-loan-cap')) || 500000;
             this.currencySymbol = $wrapper.attr('data-currency') || '£';
-            this.loanCapActive = 1; // Enable loan cap
 
-            // Initialize from slider values
-            this.monthlyTurnover = parseInt($('#turnover-slider').val()) || 10000;
-            this.loanDuration = parseInt($('#duration-slider').val()) || 24;
+            // Duration slider config
+            this.minDuration = parseInt($wrapper.attr('data-min-duration')) || 3;
+            this.maxDuration = parseInt($wrapper.attr('data-max-duration')) || 12;
+            this.currentDuration = 6; // Default
+
+            // Turnover slider config
+            this.minTurnover = parseInt($wrapper.attr('data-min-turnover')) || 10000;
+            this.maxTurnover = parseInt($wrapper.attr('data-max-turnover')) || 500000;
+            this.currentTurnover = 110000; // Default
+
+            // DOM elements
+            this.$durationDisplay = $wrapper.find('#duration-display');
+            this.$durationProgress = $wrapper.find('#duration-progress');
+            this.$durationThumb = $wrapper.find('#duration-thumb');
+            this.$durationContainer = $wrapper.find('#duration-slider-container');
+
+            this.$turnoverDisplay = $wrapper.find('#turnover-display');
+            this.$turnoverProgress = $wrapper.find('#turnover-progress');
+            this.$turnoverThumb = $wrapper.find('#turnover-thumb');
+            this.$turnoverContainer = $wrapper.find('#turnover-slider-container');
+
+            this.$calculateBtn = $wrapper.find('#calculate-btn');
+
+            this.$loanAmount = $wrapper.find('#loan-amount');
+            this.$dailyPayment = $wrapper.find('#daily-payment');
+            this.$monthlyPayment = $wrapper.find('#monthly-payment');
+            this.$totalCost = $wrapper.find('#total-cost');
+            this.$totalRepayment = $wrapper.find('#total-repayment');
 
             this.init();
         }
 
-        /**
-         * Initialize the calculator
-         */
         init() {
-            this.cacheDOMElements();
-            this.bindEvents();
-            this.formatInputs();
-            this.initializeSliders();
+            this.setupDurationSlider();
+            this.setupTurnoverSlider();
+            this.setupCalculateButton();
+
+            // Calculate initial values
             this.calculateLoan();
         }
 
-        /**
-         * Initialize range sliders
-         */
-        initializeSliders() {
-            if (this.$turnoverSlider && this.$turnoverSlider.length) {
-                this.updateSliderProgress(this.$turnoverSlider);
-                // Set initial formatted value
-                this.$turnoverValue.text(this.monthlyTurnover.toLocaleString());
-            }
-            if (this.$durationSlider && this.$durationSlider.length) {
-                this.updateSliderProgress(this.$durationSlider);
-                // Set initial value
-                this.$durationValue.text(this.loanDuration);
-            }
-        }
-
-        /**
-         * Format inputs
-         */
-        formatInputs() {
-            // No text inputs to format anymore
-        }
-
-        /**
-         * Cache DOM elements
-         */
-        cacheDOMElements() {
-            // Sliders
-            this.$turnoverSlider = $('#turnover-slider');
-            this.$durationSlider = $('#duration-slider');
-
-            // Value displays
-            this.$turnoverValue = $('#turnover-value');
-            this.$durationValue = $('#duration-value');
-
-            // Results elements
-            this.$eligibleAmount = $('#eligible-amount');
-            this.$dailyPayment = $('#daily-payment');
-            this.$monthlyPayment = $('#monthly-payment');
-            this.$totalCost = $('#total-cost');
-            this.$totalRepayment = $('#total-repayment');
-
-            // Calculate button
-            this.$calculateButton = $('#calculate-btn');
-        }
-
-        /**
-         * Bind event listeners
-         */
-        bindEvents() {
+        setupDurationSlider() {
             const self = this;
+            let isDragging = false;
 
-            // Turnover slider
-            if (this.$turnoverSlider.length) {
-                this.$turnoverSlider.on('input', function() {
-                    const value = parseInt($(this).val());
-                    self.monthlyTurnover = value;
-                    self.$turnoverValue.text(value.toLocaleString());
-                    self.updateSliderProgress($(this));
-                    self.calculateLoan(); // Real-time calculation
-                });
-            }
+            // Update slider position
+            this.updateDurationSlider(this.currentDuration);
 
-            // Duration slider
-            if (this.$durationSlider.length) {
-                this.$durationSlider.on('input', function() {
-                    const value = parseInt($(this).val());
-                    self.loanDuration = value;
-                    self.$durationValue.text(value);
-                    self.updateSliderProgress($(this));
-                    self.calculateLoan(); // Real-time calculation
-                });
-            }
-
-            // Calculate button
-            if (this.$calculateButton.length) {
-                this.$calculateButton.on('click', function(e) {
-                    e.preventDefault();
-                    $(this).addClass('btn-clicked');
-                    setTimeout(function() {
-                        self.$calculateButton.removeClass('btn-clicked');
-                    }, 200);
-                    self.calculateLoan();
-                });
-            }
-        }
-
-
-        /**
-         * Calculate loan details based on turnover (matching original formula)
-         */
-        calculateLoan() {
-            const turnover = this.monthlyTurnover;
-            const borrowTerm = this.loanDuration;
-
-            // Calculate gross percentage (monthly repayment amount)
-            const grossPercentage = turnover * this.grossPercentageSum;
-
-            // Calculate total repayment (gross result)
-            let grossResult = grossPercentage * borrowTerm;
-
-            // Apply loan cap to total repayment if active
-            if (this.loanCapActive === 1) {
-                const grossCap = this.borrowLoanCap * this.borrowFactor;
-                if (grossResult >= grossCap) {
-                    grossResult = grossCap;
-                }
-            }
-
-            // Calculate eligible amount (total result)
-            let totalResult = (grossPercentage * borrowTerm) / this.borrowFactor;
-
-            // Apply loan cap to eligible amount if active
-            if (this.loanCapActive === 1) {
-                const totalCap = (this.borrowLoanCap * this.borrowFactor) / this.borrowFactor;
-                if (totalResult >= totalCap) {
-                    totalResult = totalCap;
-                }
-            }
-
-            // Calculate total cost of loan
-            const costResult = parseInt(grossResult) - parseInt(totalResult);
-
-            // Calculate monthly repayments
-            const monthlyResult = grossResult / borrowTerm;
-
-            // Calculate daily repayments (20 business days per month)
-            const dailyResult = grossResult / (20 * borrowTerm);
-
-            // Update the display
-            this.updateResults(
-                parseInt(totalResult),    // Eligible amount
-                parseInt(dailyResult),    // Daily repayment
-                parseInt(monthlyResult),  // Monthly repayment
-                parseInt(costResult),     // Total cost
-                parseInt(grossResult)     // Total repayment
-            );
-        }
-
-        /**
-         * Update result displays
-         */
-        updateResults(eligibleAmount, dailyRepayment, monthlyRepayment, totalCost, totalRepayment) {
-            // Add animation class
-            $('.eligible-amount, .breakdown-value').addClass('updated');
-
-            // Update values
-            this.$eligibleAmount.text(this.formatCurrency(eligibleAmount));
-            this.$dailyPayment.text(this.formatCurrency(dailyRepayment));
-            this.$monthlyPayment.text(this.formatCurrency(monthlyRepayment));
-            this.$totalCost.text(this.formatCurrency(totalCost));
-            this.$totalRepayment.text(this.formatCurrency(totalRepayment));
-
-            // Remove animation class after animation completes
-            setTimeout(function() {
-                $('.eligible-amount, .breakdown-value').removeClass('updated');
-            }, 400);
-        }
-
-        /**
-         * Format number as currency
-         */
-        formatCurrency(amount) {
-            // Round to nearest whole number for cleaner display
-            const rounded = Math.round(amount);
-
-            // Format with commas, no decimal places for whole numbers
-            const formatted = rounded.toLocaleString('en-GB', {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
+            // Mouse down on container
+            this.$durationContainer.on('mousedown', function(e) {
+                isDragging = true;
+                self.handleDurationDrag(e);
+                e.preventDefault();
             });
 
-            return this.currencySymbol + formatted;
+            // Mouse move on document
+            $(document).on('mousemove.duration', function(e) {
+                if (isDragging) {
+                    self.handleDurationDrag(e);
+                }
+            });
+
+            // Mouse up on document
+            $(document).on('mouseup.duration', function() {
+                if (isDragging) {
+                    isDragging = false;
+                }
+            });
+
+            // Touch support
+            this.$durationContainer.on('touchstart', function(e) {
+                isDragging = true;
+                const touch = e.originalEvent.touches[0];
+                self.handleDurationDrag(touch);
+                e.preventDefault();
+            });
+
+            $(document).on('touchmove.duration', function(e) {
+                if (isDragging) {
+                    const touch = e.originalEvent.touches[0];
+                    self.handleDurationDrag(touch);
+                }
+            });
+
+            $(document).on('touchend.duration', function() {
+                if (isDragging) {
+                    isDragging = false;
+                }
+            });
         }
 
-        /**
-         * Update slider progress/fill
-         */
-        updateSliderProgress($slider) {
-            if (!$slider.length) return;
+        handleDurationDrag(e) {
+            const container = this.$durationContainer[0];
+            const rect = container.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const percentage = Math.max(0, Math.min(1, offsetX / rect.width));
 
-            const min = parseFloat($slider.attr('min')) || 0;
-            const max = parseFloat($slider.attr('max')) || 100;
-            const value = parseFloat($slider.val());
-            const percentage = ((value - min) / (max - min)) * 100;
+            // Calculate duration value
+            const range = this.maxDuration - this.minDuration;
+            const value = Math.round(this.minDuration + (percentage * range));
 
-            $slider.css('background', `linear-gradient(to right, #a6ce39 0%, #a6ce39 ${percentage}%, #f5f7f8 ${percentage}%, #f5f7f8 100%)`);
+            this.currentDuration = value;
+            this.updateDurationSlider(value);
+            this.calculateLoan();
+        }
+
+        updateDurationSlider(value) {
+            const range = this.maxDuration - this.minDuration;
+            const percentage = ((value - this.minDuration) / range) * 100;
+
+            this.$durationProgress.css('width', percentage + '%');
+            this.$durationThumb.css('left', 'calc(' + percentage + '% - 14px)');
+            this.$durationDisplay.text(value + ' months');
+        }
+
+        setupTurnoverSlider() {
+            const self = this;
+            let isDragging = false;
+
+            // Update slider position
+            this.updateTurnoverSlider(this.currentTurnover);
+
+            // Mouse down on container
+            this.$turnoverContainer.on('mousedown', function(e) {
+                isDragging = true;
+                self.handleTurnoverDrag(e);
+                e.preventDefault();
+            });
+
+            // Mouse move on document
+            $(document).on('mousemove.turnover', function(e) {
+                if (isDragging) {
+                    self.handleTurnoverDrag(e);
+                }
+            });
+
+            // Mouse up on document
+            $(document).on('mouseup.turnover', function() {
+                if (isDragging) {
+                    isDragging = false;
+                }
+            });
+
+            // Touch support
+            this.$turnoverContainer.on('touchstart', function(e) {
+                isDragging = true;
+                const touch = e.originalEvent.touches[0];
+                self.handleTurnoverDrag(touch);
+                e.preventDefault();
+            });
+
+            $(document).on('touchmove.turnover', function(e) {
+                if (isDragging) {
+                    const touch = e.originalEvent.touches[0];
+                    self.handleTurnoverDrag(touch);
+                }
+            });
+
+            $(document).on('touchend.turnover', function() {
+                if (isDragging) {
+                    isDragging = false;
+                }
+            });
+        }
+
+        handleTurnoverDrag(e) {
+            const container = this.$turnoverContainer[0];
+            const rect = container.getBoundingClientRect();
+            const offsetX = e.clientX - rect.left;
+            const percentage = Math.max(0, Math.min(1, offsetX / rect.width));
+
+            // Calculate turnover value (in steps of 1000)
+            const range = this.maxTurnover - this.minTurnover;
+            const rawValue = this.minTurnover + (percentage * range);
+            const value = Math.round(rawValue / 1000) * 1000;
+
+            this.currentTurnover = value;
+            this.updateTurnoverSlider(value);
+            this.calculateLoan();
+        }
+
+        updateTurnoverSlider(value) {
+            const range = this.maxTurnover - this.minTurnover;
+            const percentage = ((value - this.minTurnover) / range) * 100;
+
+            this.$turnoverProgress.css('width', percentage + '%');
+            this.$turnoverThumb.css('left', 'calc(' + percentage + '% - 14px)');
+            this.$turnoverDisplay.text(this.currencySymbol + ' ' + this.formatNumber(value));
+        }
+
+        setupCalculateButton() {
+            const self = this;
+            this.$calculateBtn.on('click', function() {
+                self.calculateLoan();
+            });
+        }
+
+        calculateLoan() {
+            const turnover = this.currentTurnover;
+            const borrowTerm = this.currentDuration;
+
+            // Calculate using gross percentage method
+            const grossPercentage = turnover * this.grossPercentageSum;
+            let eligibleAmount = (grossPercentage * borrowTerm) / this.borrowFactor;
+            let totalRepayment = grossPercentage * borrowTerm;
+
+            // Apply loan cap
+            if (eligibleAmount > this.loanCap) {
+                eligibleAmount = this.loanCap;
+                totalRepayment = this.loanCap * this.borrowFactor;
+            }
+
+            // Calculate repayments
+            const totalCost = totalRepayment - eligibleAmount;
+            const monthlyPayment = totalRepayment / borrowTerm;
+            const dailyPayment = monthlyPayment / 20; // Assuming ~20 business days per month
+
+            // Update display
+            this.$loanAmount.text(this.formatCurrency(eligibleAmount));
+            this.$dailyPayment.text(this.formatCurrency(dailyPayment));
+            this.$monthlyPayment.text(this.formatCurrency(monthlyPayment));
+            this.$totalCost.text(this.formatCurrency(totalCost));
+            this.$totalRepayment.text(this.formatCurrency(totalRepayment));
+        }
+
+        formatNumber(num) {
+            return Math.round(num).toLocaleString('en-GB');
+        }
+
+        formatCurrency(amount) {
+            const rounded = Math.round(amount);
+            const formatted = rounded.toLocaleString('en-GB');
+            return this.currencySymbol + formatted;
         }
     }
 
-    /**
-     * Initialize calculator when document is ready
-     */
+    // Initialize calculator when DOM is ready
     $(document).ready(function() {
-        if ($('.capify-loan-calculator-wrapper').length) {
-            new LoanCalculator();
-        }
+        $('.capify-loan-calculator-wrapper').each(function() {
+            new CapifyLoanCalculator($(this));
+        });
     });
 
 })(jQuery);
