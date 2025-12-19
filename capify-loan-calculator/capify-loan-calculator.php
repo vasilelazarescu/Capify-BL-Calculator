@@ -120,35 +120,40 @@ class Capify_Loan_Calculator {
              data-max-turnover="<?php echo esc_attr($atts['borrow_turnover_maximum']); ?>">
 
             <div class="calculator-card">
-                <!-- Header Section -->
-                <div class="header">
-                    <h1 class="title"><?php echo esc_html($atts['header_title']); ?></h1>
-                    <p class="subtitle"><?php echo esc_html($atts['header_subtitle']); ?></p>
-                </div>
+                <!-- Left Column: Inputs -->
+                <div class="calculator-left">
+                    <!-- Header Section -->
+                    <div class="header">
+                        <h1 class="title"><?php echo esc_html($atts['header_title']); ?></h1>
+                        <p class="subtitle"><?php echo esc_html($atts['header_subtitle']); ?></p>
+                    </div>
 
-                <!-- Loan Duration Section -->
-                <div class="input-section">
-                    <label class="input-label"><?php echo esc_html($atts['duration_label']); ?></label>
-                    <p class="input-value" id="duration-display"><?php echo esc_attr($atts['default_duration']); ?> months</p>
-                    <div class="slider-container" id="duration-slider-container">
-                        <div class="slider-track"></div>
-                        <div class="slider-progress" id="duration-progress"></div>
-                        <div class="slider-thumb" id="duration-thumb"></div>
+                    <!-- Loan Duration Section -->
+                    <div class="input-section">
+                        <label class="input-label"><?php echo esc_html($atts['duration_label']); ?></label>
+                        <p class="input-value" id="duration-display"><?php echo esc_attr($atts['default_duration']); ?> months</p>
+                        <div class="slider-container" id="duration-slider-container">
+                            <div class="slider-track"></div>
+                            <div class="slider-progress" id="duration-progress"></div>
+                            <div class="slider-thumb" id="duration-thumb"></div>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Turnover Section -->
+                    <div class="input-section">
+                        <label class="input-label"><?php echo esc_html($atts['turnover_label']); ?></label>
+                        <p class="input-value" id="turnover-display"><?php echo esc_html($atts['currency_symbol']); ?> <?php echo number_format($atts['default_turnover']); ?></p>
+                        <div class="slider-container" id="turnover-slider-container">
+                            <div class="slider-track"></div>
+                            <div class="slider-progress" id="turnover-progress"></div>
+                            <div class="slider-thumb" id="turnover-thumb"></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Monthly Turnover Section -->
-                <div class="input-section">
-                    <label class="input-label"><?php echo esc_html($atts['turnover_label']); ?></label>
-                    <p class="input-value" id="turnover-display"><?php echo esc_html($atts['currency_symbol']); ?> <?php echo number_format($atts['default_turnover']); ?></p>
-                    <div class="slider-container" id="turnover-slider-container">
-                        <div class="slider-track"></div>
-                        <div class="slider-progress" id="turnover-progress"></div>
-                        <div class="slider-thumb" id="turnover-thumb"></div>
-                    </div>
-                </div>
-
-                <!-- Results Panel -->
+                <!-- Right Column: Results -->
+                <div class="calculator-right">
+                    <!-- Results Panel -->
                 <div class="results-panel">
                     <!-- Empty State -->
                     <div class="empty-state <?php echo ($atts['empty_state_icon_position'] === 'after') ? 'icon-after' : 'icon-before'; ?>" id="empty-state">
@@ -220,6 +225,7 @@ class Capify_Loan_Calculator {
                             <p class="total-value" id="total-repayment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
