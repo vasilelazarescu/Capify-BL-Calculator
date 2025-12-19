@@ -60,7 +60,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '1.0.5'
+            '1.0.6'
         );
 
         // Enqueue JavaScript
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.5',
+            '1.0.6',
             true
         );
     }
@@ -146,15 +146,6 @@ class Capify_Loan_Calculator {
 
             <div class="calculator-container">
                 <div class="calculator-left">
-                    <div class="calculator-section-header">
-                        <h2><?php echo esc_html($atts['section_title']); ?></h2>
-                        <span class="info-icon">ⓘ</span>
-                    </div>
-
-                    <?php if (!empty($atts['section_description'])): ?>
-                    <p class="calculator-description"><?php echo esc_html($atts['section_description']); ?></p>
-                    <?php endif; ?>
-
                     <div class="calculator-form">
                         <div class="form-group slider-primary">
                             <label class="slider-label"><?php echo esc_html($atts['borrow_business_intro']); ?></label>

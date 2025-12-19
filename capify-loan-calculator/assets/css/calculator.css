@@ -1,7 +1,7 @@
 /**
  * Capify Business Loan Calculator Styles
- * Version: 1.0.5
- * Based on HTML-Capify-BL-Calculator repository design
+ * Version: 1.0.6
+ * Clean design matching desired layout
  */
 
 /* Import Poppins font */
@@ -15,7 +15,7 @@
     padding: 40px 20px;
     color: #333;
     line-height: 1.65;
-    background: #f5f7f8;
+    background: transparent;
 }
 
 /* Header */
@@ -58,34 +58,28 @@
 
 /* Calculator Intro */
 .calculator-intro {
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 }
 
 .calculator-intro p {
-    font-size: 1.1rem;
-    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
     color: #333;
+    margin: 0;
 }
 
 /* Borrow Form Intro */
 .borrow-form-intro {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    padding: 25px 30px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    border-left: 4px solid #10b981;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+    margin-bottom: 32px;
 }
 
 .borrow-form-intro p {
-    font-size: 1.05rem;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #333;
     margin: 0;
-    color: #065f46;
-    font-weight: 500;
-    line-height: 1.6;
 }
 
 /* Calculator Container */
@@ -101,40 +95,6 @@
 /* Left Section */
 .calculator-left {
     max-width: 496px;
-}
-
-.calculator-section-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.calculator-section-header h2 {
-    font-size: 1.75rem;
-    font-weight: 700;
-    margin: 0 0 10px 0;
-    color: #1e293b;
-}
-
-.info-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    background: #e0e0e0;
-    border-radius: 50%;
-    font-size: 0.9rem;
-    color: #666;
-    cursor: help;
-}
-
-.calculator-description {
-    color: #64748b;
-    margin-bottom: 30px;
-    font-size: 1rem;
-    line-height: 1.6;
 }
 
 /* Form Groups */
