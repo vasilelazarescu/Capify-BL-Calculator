@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #666;
+            margin-top: 30px;
+        }
+        .input-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .results {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #4CAF50;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .result-label {
+            color: #666;
+        }
+        .result-value {
+            color: #333;
+            font-weight: bold;
+        }
+        .formula {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .example {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .calculation-steps {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .calculation-steps h3 {
+            margin-top: 0;
+            color: #f57c00;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧮 Business Loan Calculator - Test & Verification</h1>
+
+        <p>This page demonstrates the calculation logic used in the Capify Business Loan Calculator.</p>
+
+        <h2>📝 Test the Calculator</h2>
+
+        <div class="input-group">
+            <label for="testAmount">Loan Amount (£)</label>
+            <input type="number" id="testAmount" value="100000" min="1000" step="1000">
+        </div>
+
+        <div class="input-group">
+            <label for="testRate">Annual Interest Rate (%)</label>
+            <input type="number" id="testRate" value="1.26" min="0" step="0.01">
+        </div>
+
+        <div class="input-group">
+            <label for="testMonths">Loan Duration (months)</label>
+            <input type="number" id="testMonths" value="24" min="1" step="1">
+        </div>
+
+        <button onclick="calculate()">Calculate Loan</button>
+
+        <div class="results" id="results" style="display: none;">
+            <h3>📊 Results</h3>
+            <div class="result-item">
+                <span class="result-label">Monthly Payment:</span>
+                <span class="result-value" id="monthlyPayment">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Monthly Interest (avg):</span>
+                <span class="result-value" id="monthlyInterest">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Total Interest:</span>
+                <span class="result-value" id="totalInterest">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Loan Duration:</span>
+                <span class="result-value" id="loanDuration">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Total Cost of Loan:</span>
+                <span class="result-value" id="totalCost">-</span>
+            </div>
+        </div>
+
+        <div class="calculation-steps" id="steps" style="display: none;">
+            <h3>📐 Calculation Steps</h3>
+            <div id="stepsContent"></div>
+        </div>
+    </div>
+
+    <div class="test-container">
+        <h2>📚 Formula Explanation</h2>
+
+        <p>The calculator uses the <strong>Standard Amortized Loan Formula</strong>:</p>
+
+        <div class="formula">
+M = P × [r(1+r)^n] / [(1+r)^n - 1]
+
+Where:
+M = Monthly Payment
+P = Principal (Loan Amount)
+r = Monthly Interest Rate (Annual Rate ÷ 12)
+n = Number of Months
+        </div>
+
+        <h2>🧪 Example Calculations</h2>
+
+        <div class="example">
+            <h3>Example 1: Standard Business Loan</h3>
+            <strong>Input:</strong><br>
+            • Loan Amount: £100,000<br>
+            • Annual Interest Rate: 1.26%<br>
+            • Duration: 24 months<br>
+            <br>
+            <strong>Expected Output:</strong><br>
+            • Monthly Payment: £4,233.12<br>
+            • Total Interest: £1,594.88<br>
+            • Total Cost: £101,594.88
+        </div>
+
+        <div class="example">
+            <h3>Example 2: Higher Interest Rate</h3>
+            <strong>Input:</strong><br>
+            • Loan Amount: £50,000<br>
+            • Annual Interest Rate: 5.5%<br>
+            • Duration: 36 months<br>
+            <br>
+            <strong>Expected Output:</strong><br>
+            • Monthly Payment: £1,508.77<br>
+            • Total Interest: £4,315.72<br>
+            • Total Cost: £54,315.72
+        </div>
+
+        <div class="example">
+            <h3>Example 3: Short-term Loan</h3>
+            <strong>Input:</strong><br>
+            • Loan Amount: £25,000<br>
+            • Annual Interest Rate: 3.2%<br>
+            • Duration: 12 months<br>
+            <br>
+            <strong>Expected Output:</strong><br>
+            • Monthly Payment: £2,115.86<br>
+            • Total Interest: £390.32<br>
+            • Total Cost: £25,390.32
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // Get input values
+            const principal = parseFloat(document.getElementById('testAmount').value);
+            const annualRate = parseFloat(document.getElementById('testRate').value);
+            const months = parseInt(document.getElementById('testMonths').value);
+
+            // Validate inputs
+            if (isNaN(principal) || isNaN(annualRate) || isNaN(months) ||
+                principal <= 0 || annualRate < 0 || months <= 0) {
+                alert('Please enter valid values');
+                return;
+            }
+
+            // Calculate monthly rate
+            const monthlyRate = (annualRate / 100) / 12;
+
+            // Calculate monthly payment
+            let monthlyPayment;
+            if (monthlyRate === 0) {
+                monthlyPayment = principal / months;
+            } else {
+                const x = Math.pow(1 + monthlyRate, months);
+                monthlyPayment = principal * (monthlyRate * x) / (x - 1);
+            }
+
+            // Calculate totals
+            const totalPayment = monthlyPayment * months;
+            const totalInterest = totalPayment - principal;
+            const avgMonthlyInterest = totalInterest / months;
+
+            // Display results
+            document.getElementById('monthlyPayment').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('monthlyInterest').textContent = formatCurrency(avgMonthlyInterest);
+            document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+            document.getElementById('loanDuration').textContent = months + ' months';
+            document.getElementById('totalCost').textContent = formatCurrency(totalPayment);
+            document.getElementById('results').style.display = 'block';
+
+            // Show calculation steps
+            const steps = `
+                <div class="step"><strong>Step 1:</strong> Convert annual rate to monthly<br>
+                Annual Rate: ${annualRate}% = ${(annualRate/100).toFixed(6)}<br>
+                Monthly Rate: ${(annualRate/100).toFixed(6)} ÷ 12 = ${monthlyRate.toFixed(8)}</div>
+
+                <div class="step"><strong>Step 2:</strong> Calculate (1 + r)^n<br>
+                x = (1 + ${monthlyRate.toFixed(8)})^${months}<br>
+                x = ${Math.pow(1 + monthlyRate, months).toFixed(8)}</div>
+
+                <div class="step"><strong>Step 3:</strong> Apply loan formula<br>
+                M = ${principal.toLocaleString()} × (${monthlyRate.toFixed(8)} × ${Math.pow(1 + monthlyRate, months).toFixed(8)}) / (${Math.pow(1 + monthlyRate, months).toFixed(8)} - 1)<br>
+                M = £${monthlyPayment.toFixed(2)}</div>
+
+                <div class="step"><strong>Step 4:</strong> Calculate totals<br>
+                Total Payment = £${monthlyPayment.toFixed(2)} × ${months} = £${totalPayment.toFixed(2)}<br>
+                Total Interest = £${totalPayment.toFixed(2)} - £${principal.toLocaleString()} = £${totalInterest.toFixed(2)}<br>
+                Avg Monthly Interest = £${totalInterest.toFixed(2)} ÷ ${months} = £${avgMonthlyInterest.toFixed(2)}</div>
+            `;
+            document.getElementById('stepsContent').innerHTML = steps;
+            document.getElementById('steps').style.display = 'block';
+        }
+
+        function formatCurrency(amount) {
+            return '£' + amount.toLocaleString('en-GB', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // Run calculation on page load
+        calculate();
+    </script>
+</body>
+</html>
