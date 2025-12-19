@@ -15,11 +15,20 @@
             const $wrapper = $('.capify-loan-calculator-wrapper');
 
             // Read settings from data attributes with fallback defaults
-            this.borrowFactor = parseFloat($wrapper.data('borrow-factor')) || 1.26;
-            this.grossPercentageSum = parseFloat($wrapper.data('gross-percentage')) || 0.13;
-            this.borrowLoanCap = parseFloat($wrapper.data('loan-cap')) || 500000;
-            this.currencySymbol = $wrapper.data('currency') || '£';
+            // Use attr() and parseFloat to ensure proper decimal reading
+            this.borrowFactor = parseFloat($wrapper.attr('data-borrow-factor')) || 1.26;
+            this.grossPercentageSum = parseFloat($wrapper.attr('data-gross-percentage')) || 0.13;
+            this.borrowLoanCap = parseFloat($wrapper.attr('data-loan-cap')) || 500000;
+            this.currencySymbol = $wrapper.attr('data-currency') || '£';
             this.loanCapActive = 1; // Enable loan cap
+
+            // Debug log to verify settings are loaded
+            console.log('Calculator Settings:', {
+                borrowFactor: this.borrowFactor,
+                grossPercentage: this.grossPercentageSum,
+                loanCap: this.borrowLoanCap,
+                currency: this.currencySymbol
+            });
 
             // Initialize from slider values
             this.monthlyTurnover = parseInt($('#turnover-slider').val()) || 10000;

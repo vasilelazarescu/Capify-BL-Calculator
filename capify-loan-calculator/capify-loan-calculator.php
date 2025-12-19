@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.0',
+            '1.0.2',
             true
         );
     }
