@@ -55,19 +55,36 @@ class Capify_Loan_Calculator {
      * Enqueue styles and scripts
      */
     public function enqueue_scripts() {
+        // Enqueue noUiSlider CSS
+        wp_enqueue_style(
+            'nouislider',
+            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css',
+            array(),
+            '15.7.1'
+        );
+
         // Enqueue CSS
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
-            array(),
+            array('nouislider'),
             '2.1.0'
+        );
+
+        // Enqueue noUiSlider JS
+        wp_enqueue_script(
+            'nouislider',
+            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js',
+            array(),
+            '15.7.1',
+            true
         );
 
         // Enqueue JavaScript
         wp_enqueue_script(
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
-            array('jquery'),
+            array('jquery', 'nouislider'),
             '2.1.0',
             true
         );

@@ -98,61 +98,83 @@
     margin-bottom: 20px;
 }
 
-/* Slider Styles */
+/* noUiSlider Custom Styling */
 .slider-container {
     position: relative;
     height: 28px;
     width: 100%;
-    cursor: pointer;
+    padding: 10px 0;
 }
 
-.slider-track {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    right: 0;
+/* noUiSlider base */
+.slider-container .noUi-target {
+    background: #f5f7f8;
+    border-radius: 32px;
+    border: none;
+    box-shadow: none;
     height: 8px;
-    background-color: #f5f7f8;
+}
+
+/* Horizontal slider base */
+.slider-container .noUi-horizontal {
+    height: 8px;
+}
+
+/* Connecting bar (progress) */
+.slider-container .noUi-connects {
     border-radius: 32px;
 }
 
-.slider-progress {
-    position: absolute;
-    top: 10px;
-    left: 0;
-    height: 8px;
-    background-color: #a6ce39;
+.slider-container .noUi-connect {
+    background: #a6ce39;
     border-radius: 32px;
-    z-index: 1;
-    transition: width 0.1s ease;
 }
 
-.slider-thumb {
-    position: absolute;
-    top: 0;
+/* Handle (thumb) */
+.slider-container .noUi-handle {
     width: 28px;
     height: 28px;
     background-color: #a6ce39;
     border-radius: 50%;
     box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+    border: none;
     cursor: grab;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: left 0.1s ease;
+    top: 50%;
+    transform: translateY(-50%);
+    right: -14px;
 }
 
-.slider-thumb:active {
-    cursor: grabbing;
+.slider-container .noUi-handle:before,
+.slider-container .noUi-handle:after {
+    display: none;
 }
 
-.slider-thumb::after {
+/* White dot in center of handle */
+.slider-container .noUi-handle::before {
     content: '';
+    display: block;
+    position: absolute;
     width: 12px;
     height: 12px;
     background-color: white;
-    border-radius: 12px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.slider-container .noUi-handle:active {
+    cursor: grabbing;
+}
+
+/* Remove default tooltip */
+.slider-container .noUi-tooltip {
+    display: none;
+}
+
+/* Smooth touch interactions */
+.slider-container .noUi-target {
+    touch-action: none;
 }
 
 /* Calculate Button */
