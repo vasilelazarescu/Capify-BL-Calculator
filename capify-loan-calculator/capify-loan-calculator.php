@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 2.1.0
+ * Version: 2.2.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array('nouislider'),
-            '2.1.0'
+            '2.2.0'
         );
 
         // Enqueue noUiSlider JS
@@ -85,7 +85,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery', 'nouislider'),
-            '2.1.0',
+            '2.2.0',
             true
         );
     }
