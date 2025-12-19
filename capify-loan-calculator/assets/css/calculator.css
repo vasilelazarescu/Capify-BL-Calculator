@@ -188,6 +188,12 @@
     opacity: 0.6;
 }
 
+/* Icon positioning adjustments */
+.empty-state.icon-after .empty-state-icon {
+    margin-bottom: 0;
+    margin-top: 24px;
+}
+
 .empty-state-title {
     font-weight: 700;
     font-size: 20px;

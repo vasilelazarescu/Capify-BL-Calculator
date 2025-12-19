@@ -104,6 +104,7 @@ class Capify_Loan_Calculator {
             'empty_state_title' => 'Your estimate will appear here',
             'empty_state_subtitle' => 'Move the sliders to get your instant loan estimate',
             'empty_state_custom_icon' => '',
+            'empty_state_icon_position' => 'before',
         ), $atts);
 
         ob_start();
@@ -150,22 +151,36 @@ class Capify_Loan_Calculator {
                 <!-- Results Panel -->
                 <div class="results-panel">
                     <!-- Empty State -->
-                    <div class="empty-state" id="empty-state">
-                        <div class="empty-state-icon">
-                            <?php if (!empty($atts['empty_state_custom_icon'])): ?>
-                                <img src="<?php echo esc_url($atts['empty_state_custom_icon']); ?>" alt="<?php echo esc_attr($atts['empty_state_title']); ?>" />
-                            <?php else: ?>
-                                <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>
-                                    <rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>
-                                    <rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>
-                                    <rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>
-                                    <rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>
-                                </svg>
-                            <?php endif; ?>
-                        </div>
-                        <h2 class="empty-state-title"><?php echo esc_html($atts['empty_state_title']); ?></h2>
-                        <p class="empty-state-subtitle"><?php echo esc_html($atts['empty_state_subtitle']); ?></p>
+                    <div class="empty-state <?php echo ($atts['empty_state_icon_position'] === 'after') ? 'icon-after' : 'icon-before'; ?>" id="empty-state">
+                        <?php
+                        // Icon/Image HTML
+                        $icon_html = '<div class="empty-state-icon">';
+                        if (!empty($atts['empty_state_custom_icon'])) {
+                            $icon_html .= '<img src="' . esc_url($atts['empty_state_custom_icon']) . '" alt="' . esc_attr($atts['empty_state_title']) . '" />';
+                        } else {
+                            $icon_html .= '<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">';
+                            $icon_html .= '<rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>';
+                            $icon_html .= '<rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>';
+                            $icon_html .= '<rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>';
+                            $icon_html .= '<rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>';
+                            $icon_html .= '<rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>';
+                            $icon_html .= '</svg>';
+                        }
+                        $icon_html .= '</div>';
+
+                        // Text HTML
+                        $text_html = '<h2 class="empty-state-title">' . esc_html($atts['empty_state_title']) . '</h2>';
+                        $text_html .= '<p class="empty-state-subtitle">' . esc_html($atts['empty_state_subtitle']) . '</p>';
+
+                        // Render in order based on position setting
+                        if ($atts['empty_state_icon_position'] === 'after') {
+                            echo $text_html;
+                            echo $icon_html;
+                        } else {
+                            echo $icon_html;
+                            echo $text_html;
+                        }
+                        ?>
                     </div>
 
                     <!-- Results Content -->

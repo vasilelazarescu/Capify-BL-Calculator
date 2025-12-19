@@ -907,6 +907,19 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_control(
+            'empty_state_icon_position',
+            [
+                'label' => __('Icon Position', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'default' => 'before',
+                'options' => [
+                    'before' => __('Before Text', 'capify-loan-calculator'),
+                    'after' => __('After Text', 'capify-loan-calculator'),
+                ],
+            ]
+        );
+
         $this->add_responsive_control(
             'empty_state_icon_size',
             [
@@ -1094,6 +1107,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             'empty_state_title' => $settings['empty_state_title'],
             'empty_state_subtitle' => $settings['empty_state_subtitle'],
             'empty_state_custom_icon' => isset($settings['empty_state_custom_icon']['url']) ? $settings['empty_state_custom_icon']['url'] : '',
+            'empty_state_icon_position' => $settings['empty_state_icon_position'],
             'borrow_months_min' => $settings['borrow_months_min'],
             'borrow_months_maximum' => $settings['borrow_months_maximum'],
             'default_duration' => $settings['default_duration'],
