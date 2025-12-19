@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 2.0.1
+ * Version: 2.0.2
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -60,7 +60,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '2.0.1'
+            '2.0.2'
         );
 
         // Enqueue JavaScript
@@ -68,7 +68,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '2.0.1',
+            '2.0.2',
             true
         );
     }
@@ -166,15 +166,19 @@ class Capify_Loan_Calculator {
                             <p class="repayment-label"><?php echo esc_html($atts['daily_repayment_label']); ?></p>
                             <p class="repayment-value" id="daily-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
+                        <div class="vertical-divider"></div>
                         <div class="repayment-item">
                             <p class="repayment-label"><?php echo esc_html($atts['monthly_repayment_label']); ?></p>
                             <p class="repayment-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
+                        <div class="vertical-divider"></div>
                         <div class="repayment-item">
                             <p class="repayment-label"><?php echo esc_html($atts['total_cost_label']); ?></p>
                             <p class="repayment-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
                         </div>
                     </div>
+
+                    <div class="divider"></div>
 
                     <div class="total-section">
                         <p class="total-label"><?php echo esc_html($atts['total_repayment_label']); ?></p>
