@@ -948,6 +948,18 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
+        $this->add_responsive_control(
+            'results_subtitle_margin',
+            [
+                'label' => __('Subtitle Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .results-subtitle' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
         $this->add_control(
             'disclaimer_heading',
             [
@@ -972,6 +984,18 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .disclaimer' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'disclaimer_margin',
+            [
+                'label' => __('Disclaimer Margin', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::DIMENSIONS,
+                'size_units' => ['px', '%', 'em'],
+                'selectors' => [
+                    '{{WRAPPER}} .disclaimer' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
