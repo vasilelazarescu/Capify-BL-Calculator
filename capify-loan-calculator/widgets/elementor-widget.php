@@ -28,7 +28,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
      * Get widget icon
      */
     public function get_icon() {
-        return 'eicon-calculator';
+        return 'eicon-number-field';
     }
 
     /**
