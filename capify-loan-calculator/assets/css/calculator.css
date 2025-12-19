@@ -18,6 +18,7 @@
 .capify-loan-calculator-wrapper {
     font-family: 'Poppins', sans-serif;
     width: 100%;
+    margin: 0 auto;
 }
 
 .calculator-card {
@@ -363,12 +364,30 @@
 }
 
 @media (max-width: 768px) {
+    .capify-loan-calculator-wrapper {
+        max-width: 100%;
+        padding: 0 16px;
+    }
+
     .calculator-card {
         padding: 24px;
+        margin: 0 auto;
     }
 
     .calculator-left {
         margin-bottom: 24px;
+    }
+
+    .header,
+    .input-section,
+    .results-panel {
+        text-align: center;
+    }
+
+    .header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
     .title {
