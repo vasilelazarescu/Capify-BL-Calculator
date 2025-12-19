@@ -1,6 +1,6 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 2.0.3
+ * Version: 2.0.4
  */
 
 (function($) {
