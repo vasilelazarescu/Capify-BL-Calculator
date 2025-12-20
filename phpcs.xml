@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ruleset name="Capify Loan Calculator">
+    <description>Coding standards for Capify Loan Calculator plugin</description>
+
+    <!-- Check all PHP files in the plugin directory -->
+    <file>./capify-loan-calculator</file>
+
+    <!-- Exclude vendor and node_modules -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- Show progress and sniff codes -->
+    <arg value="ps"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+
+    <!-- Use WordPress coding standards -->
+    <rule ref="WordPress">
+        <!-- Exclude rules that are too strict for this project -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+        <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+    </rule>
+
+    <!-- Check for PHP cross-version compatibility -->
+    <config name="testVersion" value="7.4-"/>
+    <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Additional WordPress rules -->
+    <rule ref="WordPress.Security.EscapeOutput"/>
+    <rule ref="WordPress.Security.NonceVerification"/>
+    <rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="capify-loan-calculator"/>
+            </property>
+        </properties>
+    </rule>
+
+    <!-- Minimum PHP version -->
+    <config name="minimum_supported_wp_version" value="5.0"/>
+</ruleset>

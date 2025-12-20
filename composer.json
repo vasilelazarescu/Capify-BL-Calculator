@@ -1,0 +1,42 @@
+{
+  "name": "capify/loan-calculator",
+  "description": "Business Loan Calculator for WordPress - Development tools and quality assurance",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Capify",
+      "homepage": "https://capify.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.8",
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "phpstan/phpstan": "^1.10",
+    "phpunit/phpunit": "^9.6",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
+  },
+  "scripts": {
+    "phpcs": "phpcs --standard=WordPress capify-loan-calculator/",
+    "phpcs:fix": "phpcbf --standard=WordPress capify-loan-calculator/",
+    "phpstan": "phpstan analyse capify-loan-calculator/ --level=5",
+    "test": "phpunit",
+    "check": [
+      "@phpcs",
+      "@phpstan"
+    ]
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "support": {
+    "issues": "https://github.com/vasilelazarescu/Capify-BL-Calculator/issues",
+    "source": "https://github.com/vasilelazarescu/Capify-BL-Calculator"
+  }
+}
