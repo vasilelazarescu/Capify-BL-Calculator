@@ -700,39 +700,6 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
-            'slider_spacing_heading',
-            [
-                'label' => __('Spacing', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::HEADING,
-                'separator' => 'before',
-            ]
-        );
-
-        $this->add_responsive_control(
-            'slider_track_margin',
-            [
-                'label' => __('Track Margin', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-target' => 'margin: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
-        $this->add_responsive_control(
-            'slider_container_padding',
-            [
-                'label' => __('Container Padding', 'capify-loan-calculator'),
-                'type' => \Elementor\Controls_Manager::DIMENSIONS,
-                'size_units' => ['px', '%', 'em'],
-                'selectors' => [
-                    '{{WRAPPER}} .slider-container' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-                ],
-            ]
-        );
-
         $this->end_controls_section();
 
         // Results Panel Style
