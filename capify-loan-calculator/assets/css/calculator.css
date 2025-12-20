@@ -107,9 +107,22 @@
 }
 
 /* Essential noUiSlider structure (replaces default CSS) */
+.slider-container .noUi-target,
+.slider-container .noUi-target * {
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-user-select: none;
+    -ms-touch-action: none;
+    touch-action: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 .slider-container .noUi-target {
     position: relative;
-    direction: ltr;
 }
 
 .slider-container .noUi-base,
@@ -141,8 +154,39 @@
     transform-style: flat;
 }
 
+.slider-container .noUi-txt-dir-rtl.noUi-horizontal .noUi-origin {
+    left: 0;
+    right: auto;
+}
+
+.slider-container .noUi-vertical .noUi-origin {
+    top: -100%;
+    width: 0;
+}
+
 .slider-container .noUi-horizontal .noUi-origin {
     height: 0;
+}
+
+.slider-container .noUi-handle {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    position: absolute;
+}
+
+.slider-container .noUi-touch-area {
+    height: 100%;
+    width: 100%;
+}
+
+.slider-container .noUi-state-tap .noUi-connect,
+.slider-container .noUi-state-tap .noUi-origin {
+    -webkit-transition: transform 0.3s;
+    transition: transform 0.3s;
+}
+
+.slider-container .noUi-state-drag * {
+    cursor: inherit !important;
 }
 
 /* Remove ALL default borders and shadows */
@@ -155,16 +199,22 @@
     outline: 0 !important;
 }
 
-/* Custom styling */
+/* Horizontal slider */
+.slider-container .noUi-horizontal {
+    height: 8px;
+}
+
+.slider-container .noUi-horizontal .noUi-handle {
+    width: 28px;
+    height: 28px;
+    right: -14px;
+    top: -10px;
+}
+
+/* Custom visual styling */
 .slider-container .noUi-target {
     background: #f5f7f8;
     border-radius: 32px;
-    height: 8px;
-    touch-action: none;
-}
-
-.slider-container .noUi-horizontal {
-    height: 8px;
 }
 
 .slider-container .noUi-connects {
@@ -176,57 +226,34 @@
     border-radius: 32px;
 }
 
-/* Handle (thumb) */
+/* Handle (thumb) - custom styling */
 .slider-container .noUi-handle {
-    width: 28px !important;
-    height: 28px !important;
     background-color: #a6ce39;
-    border-radius: 50% !important;
-    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25) !important;
+    border-radius: 50%;
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
     cursor: grab;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    right: -14px !important;
-}
-
-/* Hide default pseudo-elements */
-.slider-container .noUi-handle:after {
-    display: none !important;
-}
-
-/* White dot in center of handle - using :before */
-.slider-container .noUi-handle:before {
-    content: '' !important;
-    display: block !important;
-    position: absolute !important;
-    width: 12px !important;
-    height: 12px !important;
-    background-color: white !important;
-    border-radius: 50% !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    border: 0 !important;
-    box-shadow: none !important;
 }
 
 .slider-container .noUi-handle:active {
     cursor: grabbing;
 }
 
-.slider-container .noUi-handle:focus {
-    outline: 0 !important;
+/* White dot in center of handle */
+.slider-container .noUi-handle:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: white;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* Remove default tooltip */
-.slider-container .noUi-tooltip {
-    display: none !important;
-}
-
-/* Fix for horizontal slider origin */
-.slider-container .noUi-horizontal .noUi-origin {
-    height: 0 !important;
-    top: 4px !important;
+.slider-container .noUi-handle:after {
+    content: none;
 }
 
 /* Calculate Button */
