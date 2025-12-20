@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 2.3.0
+ * Version: 2.4.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -55,18 +55,23 @@ class Capify_Loan_Calculator {
      * Enqueue styles and scripts
      */
     public function enqueue_scripts() {
-        // DO NOT enqueue noUiSlider default CSS - we have complete custom styling
-        // This prevents default borders and box-shadows from being applied
+        // Enqueue noUiSlider default CSS first
+        wp_enqueue_style(
+            'nouislider',
+            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css',
+            array(),
+            '15.7.1'
+        );
 
-        // Enqueue our custom CSS (no dependency on nouislider CSS)
+        // Enqueue our custom CSS (overrides noUiSlider defaults)
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
-            array(),
-            '2.3.0'
+            array('nouislider'),
+            '2.4.0'
         );
 
-        // Enqueue noUiSlider JS only
+        // Enqueue noUiSlider JS
         wp_enqueue_script(
             'nouislider',
             'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js',
@@ -80,7 +85,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery', 'nouislider'),
-            '2.3.0',
+            '2.4.0',
             true
         );
     }

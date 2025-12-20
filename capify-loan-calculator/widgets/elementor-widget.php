@@ -695,7 +695,182 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Thumb Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_dimensions_heading',
+            [
+                'label' => __('Track Dimensions', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_track_height',
+            [
+                'label' => __('Track Height', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 2,
+                        'max' => 20,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 8,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-target' => 'height: {{SIZE}}{{UNIT}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_track_border_radius',
+            [
+                'label' => __('Track Border Radius', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 32,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-target' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .slider-container .noUi-connect' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .slider-container .noUi-connects' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'slider_thumb_heading',
+            [
+                'label' => __('Thumb (Handle)', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_thumb_size',
+            [
+                'label' => __('Thumb Size', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 16,
+                        'max' => 48,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 28,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-handle' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important; right: calc(-{{SIZE}}{{UNIT}} / 2) !important; top: calc(-{{SIZE}}{{UNIT}} / 2 + 4px) !important;',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_thumb_border_radius',
+            [
+                'label' => __('Thumb Border Radius', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                        'step' => 1,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 50,
+                    'unit' => '%',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-handle' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Box_Shadow::get_type(),
+            [
+                'name' => 'slider_thumb_box_shadow',
+                'label' => __('Thumb Box Shadow', 'capify-loan-calculator'),
+                'selector' => '{{WRAPPER}} .slider-container .noUi-handle',
+            ]
+        );
+
+        $this->add_control(
+            'slider_thumb_dot_heading',
+            [
+                'label' => __('Thumb Center Dot', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::HEADING,
+                'separator' => 'before',
+            ]
+        );
+
+        $this->add_control(
+            'slider_thumb_dot_color',
+            [
+                'label' => __('Dot Color', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => '#ffffff',
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-handle:before' => 'background-color: {{VALUE}} !important;',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'slider_thumb_dot_size',
+            [
+                'label' => __('Dot Size', 'capify-loan-calculator'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 20,
+                        'step' => 1,
+                    ],
+                ],
+                'default' => [
+                    'size' => 12,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .slider-container .noUi-handle:before' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important;',
                 ],
             ]
         );
