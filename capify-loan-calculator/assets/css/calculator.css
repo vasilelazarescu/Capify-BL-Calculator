@@ -99,16 +99,17 @@
 }
 
 /* noUiSlider Custom Styling - Overrides default library styles */
-.slider-container {
+.capify-loan-calculator-wrapper .slider-container {
     position: relative;
     height: 28px;
     width: 100%;
     padding: 10px 0;
 }
 
-/* Override default noUiSlider visual styles */
+/* Override default noUiSlider visual styles with maximum specificity */
 /* Track (background bar) */
-.slider-container .noUi-target {
+.capify-loan-calculator-wrapper .slider-container .noUi-target,
+.capify-loan-calculator-wrapper .slider-container .noUi-target.noUi-horizontal {
     background: #f5f7f8 !important;
     border: none !important;
     box-shadow: none !important;
@@ -117,17 +118,23 @@
 }
 
 /* Progress bar (filled portion) */
-.slider-container .noUi-connect {
+.capify-loan-calculator-wrapper .slider-container .noUi-connect {
     background: #a6ce39 !important;
     border-radius: 32px !important;
 }
 
+/* Ensure connects has proper border-radius */
+.capify-loan-calculator-wrapper .slider-container .noUi-connects {
+    border-radius: 32px !important;
+}
+
 /* Handle (draggable thumb) */
-.slider-container .noUi-handle {
+.capify-loan-calculator-wrapper .slider-container .noUi-handle {
     width: 28px !important;
     height: 28px !important;
     right: -14px !important;
     top: -10px !important;
+    background: #a6ce39 !important;
     background-color: #a6ce39 !important;
     border: none !important;
     border-radius: 50% !important;
@@ -135,16 +142,16 @@
     cursor: grab !important;
 }
 
-.slider-container .noUi-handle:active {
+.capify-loan-calculator-wrapper .slider-container .noUi-handle:active {
     cursor: grabbing !important;
 }
 
-.slider-container .noUi-handle:focus {
+.capify-loan-calculator-wrapper .slider-container .noUi-handle:focus {
     outline: none !important;
 }
 
 /* White dot in center of handle */
-.slider-container .noUi-handle:before {
+.capify-loan-calculator-wrapper .slider-container .noUi-handle:before {
     content: '' !important;
     display: block !important;
     position: absolute !important;
@@ -160,23 +167,18 @@
 }
 
 /* Remove default handle's ::after element */
-.slider-container .noUi-handle:after {
+.capify-loan-calculator-wrapper .slider-container .noUi-handle:after {
     content: none !important;
     display: none !important;
 }
 
-/* Ensure connects has proper border-radius */
-.slider-container .noUi-connects {
-    border-radius: 32px !important;
-}
-
 /* Disabled state */
-.slider-container .noUi-target[disabled] {
+.capify-loan-calculator-wrapper .slider-container .noUi-target[disabled] {
     opacity: 0.5;
     cursor: not-allowed !important;
 }
 
-.slider-container .noUi-target[disabled] .noUi-handle {
+.capify-loan-calculator-wrapper .slider-container .noUi-target[disabled] .noUi-handle {
     cursor: not-allowed !important;
 }
 

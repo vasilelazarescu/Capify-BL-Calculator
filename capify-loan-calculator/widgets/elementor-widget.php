@@ -673,7 +673,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Track Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-target' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-target' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -684,7 +684,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Progress Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-connect' => 'background-color: {{VALUE}};',
+                    '{{WRAPPER}} .slider-container .noUi-connect' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
                 ],
             ]
         );
@@ -695,7 +695,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Thumb Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
                 ],
             ]
         );
