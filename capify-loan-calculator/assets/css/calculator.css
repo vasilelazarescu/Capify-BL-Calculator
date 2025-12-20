@@ -226,6 +226,15 @@
     border-radius: 32px;
 }
 
+/* Cursor properties */
+.slider-container .noUi-target {
+    cursor: pointer;
+}
+
+.slider-container .noUi-draggable {
+    cursor: ew-resize;
+}
+
 /* Handle (thumb) - custom styling */
 .slider-container .noUi-handle {
     background-color: #a6ce39;
@@ -236,6 +245,11 @@
 
 .slider-container .noUi-handle:active {
     cursor: grabbing;
+}
+
+.slider-container .noUi-target[disabled] .noUi-handle,
+.slider-container .noUi-target[disabled] {
+    cursor: not-allowed;
 }
 
 /* White dot in center of handle */
