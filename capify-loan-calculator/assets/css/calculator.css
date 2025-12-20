@@ -98,7 +98,7 @@
     margin-bottom: 20px;
 }
 
-/* noUiSlider Custom Styling */
+/* noUiSlider Custom Styling - Override all defaults */
 .slider-container {
     position: relative;
     height: 28px;
@@ -106,79 +106,74 @@
     padding: 10px 0;
 }
 
-/* noUiSlider base */
-.slider-container .noUi-target {
-    background: #f5f7f8;
-    border-radius: 32px;
-    border: none !important;
+/* noUiSlider base - remove all default styling */
+.slider-container .noUi-target,
+.slider-container .noUi-target * {
+    border: 0 !important;
     box-shadow: none !important;
-    height: 8px;
-    touch-action: none;
+    outline: 0 !important;
 }
 
-/* Remove all borders from all slider elements */
-.slider-container .noUi-target,
-.slider-container .noUi-base,
-.slider-container .noUi-connects,
-.slider-container .noUi-connect,
-.slider-container .noUi-origin {
-    border: none !important;
-    box-shadow: none !important;
-    outline: none !important;
+.slider-container .noUi-target {
+    background: #f5f7f8;
+    border-radius: 32px !important;
+    height: 8px !important;
+    touch-action: none;
 }
 
 /* Horizontal slider base */
 .slider-container .noUi-horizontal {
-    height: 8px;
+    height: 8px !important;
+}
+
+.slider-container .noUi-horizontal .noUi-handle {
+    width: 28px !important;
+    height: 28px !important;
+    right: -14px !important;
 }
 
 /* Connecting bar (progress) */
 .slider-container .noUi-connects {
-    border-radius: 32px;
+    border-radius: 32px !important;
 }
 
 .slider-container .noUi-connect {
     background: #a6ce39;
-    border-radius: 32px;
-}
-
-/* Remove default base styling */
-.slider-container .noUi-base {
-    position: relative;
+    border-radius: 32px !important;
 }
 
 /* Handle (thumb) */
 .slider-container .noUi-handle {
-    width: 28px;
-    height: 28px;
+    width: 28px !important;
+    height: 28px !important;
     background-color: #a6ce39;
-    border-radius: 50%;
+    border-radius: 50% !important;
     box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25) !important;
-    border: none !important;
     cursor: grab;
-    top: 50%;
-    transform: translateY(-50%);
-    right: -14px;
-    outline: none !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    right: -14px !important;
 }
 
 /* Hide default pseudo-elements */
 .slider-container .noUi-handle:after {
-    display: none;
+    display: none !important;
 }
 
 /* White dot in center of handle - using :before */
 .slider-container .noUi-handle:before {
-    content: '';
+    content: '' !important;
     display: block !important;
-    position: absolute;
-    width: 12px;
-    height: 12px;
-    background-color: white;
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute !important;
+    width: 12px !important;
+    height: 12px !important;
+    background-color: white !important;
+    border-radius: 50% !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border: 0 !important;
+    box-shadow: none !important;
 }
 
 .slider-container .noUi-handle:active {
@@ -186,18 +181,18 @@
 }
 
 .slider-container .noUi-handle:focus {
-    outline: none !important;
+    outline: 0 !important;
 }
 
 /* Remove default tooltip */
 .slider-container .noUi-tooltip {
-    display: none;
+    display: none !important;
 }
 
 /* Fix for horizontal slider origin */
 .slider-container .noUi-horizontal .noUi-origin {
-    height: 0;
-    top: 4px;
+    height: 0 !important;
+    top: 4px !important;
 }
 
 /* Calculate Button */
