@@ -116,6 +116,17 @@
     touch-action: none;
 }
 
+/* Remove all borders from all slider elements */
+.slider-container .noUi-target,
+.slider-container .noUi-base,
+.slider-container .noUi-connects,
+.slider-container .noUi-connect,
+.slider-container .noUi-origin {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
 /* Horizontal slider base */
 .slider-container .noUi-horizontal {
     height: 8px;
