@@ -98,7 +98,7 @@
     margin-bottom: 20px;
 }
 
-/* noUiSlider Custom Styling - Override all defaults */
+/* noUiSlider Custom Styling - Complete replacement for default CSS */
 .slider-container {
     position: relative;
     height: 28px;
@@ -106,40 +106,74 @@
     padding: 10px 0;
 }
 
-/* noUiSlider base - remove all default styling */
+/* Essential noUiSlider structure (replaces default CSS) */
+.slider-container .noUi-target {
+    position: relative;
+    direction: ltr;
+}
+
+.slider-container .noUi-base,
+.slider-container .noUi-connects {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.slider-container .noUi-connects {
+    overflow: hidden;
+    z-index: 0;
+}
+
+.slider-container .noUi-connect,
+.slider-container .noUi-origin {
+    will-change: transform;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    -ms-transform-origin: 0 0;
+    -webkit-transform-origin: 0 0;
+    -webkit-transform-style: preserve-3d;
+    transform-origin: 0 0;
+    transform-style: flat;
+}
+
+.slider-container .noUi-horizontal .noUi-origin {
+    height: 0;
+}
+
+/* Remove ALL default borders and shadows */
 .slider-container .noUi-target,
-.slider-container .noUi-target * {
+.slider-container .noUi-target *,
+.slider-container .noUi-target *::before,
+.slider-container .noUi-target *::after {
     border: 0 !important;
     box-shadow: none !important;
     outline: 0 !important;
 }
 
+/* Custom styling */
 .slider-container .noUi-target {
     background: #f5f7f8;
-    border-radius: 32px !important;
-    height: 8px !important;
+    border-radius: 32px;
+    height: 8px;
     touch-action: none;
 }
 
-/* Horizontal slider base */
 .slider-container .noUi-horizontal {
-    height: 8px !important;
+    height: 8px;
 }
 
-.slider-container .noUi-horizontal .noUi-handle {
-    width: 28px !important;
-    height: 28px !important;
-    right: -14px !important;
-}
-
-/* Connecting bar (progress) */
 .slider-container .noUi-connects {
-    border-radius: 32px !important;
+    border-radius: 32px;
 }
 
 .slider-container .noUi-connect {
     background: #a6ce39;
-    border-radius: 32px !important;
+    border-radius: 32px;
 }
 
 /* Handle (thumb) */

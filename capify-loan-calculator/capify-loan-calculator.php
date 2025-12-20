@@ -55,36 +55,18 @@ class Capify_Loan_Calculator {
      * Enqueue styles and scripts
      */
     public function enqueue_scripts() {
-        // Enqueue noUiSlider CSS
-        wp_enqueue_style(
-            'nouislider',
-            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css',
-            array(),
-            '15.7.1'
-        );
+        // DO NOT enqueue noUiSlider default CSS - we have complete custom styling
+        // This prevents default borders and box-shadows from being applied
 
-        // Enqueue CSS
+        // Enqueue our custom CSS (no dependency on nouislider CSS)
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
-            array('nouislider'),
+            array(),
             '2.3.0'
         );
 
-        // Add critical inline styles to override noUiSlider defaults
-        $inline_css = '
-            .slider-container .noUi-target,
-            .slider-container .noUi-target *,
-            .slider-container .noUi-target *::before,
-            .slider-container .noUi-target *::after {
-                border: 0 !important;
-                box-shadow: none !important;
-                outline: 0 !important;
-            }
-        ';
-        wp_add_inline_style('capify-loan-calculator-style', $inline_css);
-
-        // Enqueue noUiSlider JS
+        // Enqueue noUiSlider JS only
         wp_enqueue_script(
             'nouislider',
             'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js',
