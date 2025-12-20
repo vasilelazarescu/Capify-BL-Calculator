@@ -1,10 +1,15 @@
 /**
  * Capify Business Loan Calculator JavaScript
- * Version: 1.0.0
+ * Version: 1.1.0
+ * Performance optimized
  */
 
 (function($) {
     'use strict';
+
+    // Constants
+    const DEBOUNCE_DELAY = 200; // milliseconds
+    const ANIMATION_DURATION = 300; // milliseconds
 
     /**
      * Loan Calculator Class
@@ -15,6 +20,7 @@
             this.interestRate = 1.26;
             this.loanDuration = 24;
             this.currencySymbol = '£';
+            this.debounceTimer = null;
 
             this.init();
         }
@@ -45,11 +51,19 @@
             this.$loanLength = $('#loan-length');
             this.$totalCost = $('#total-cost');
 
-            // Get currency symbol from first result element
-            const firstResult = this.$monthlyPayment.text();
-            const match = firstResult.match(/^[£$€]/);
-            if (match) {
-                this.currencySymbol = match[0];
+            // Cache all result values for animation
+            this.$allResults = $('.result-value');
+
+            // Get currency symbol from data attribute or first result element
+            const currencyData = this.$loanAmountInput.closest('.capify-loan-calculator-wrapper').data('currency');
+            if (currencyData) {
+                this.currencySymbol = currencyData;
+            } else {
+                const firstResult = this.$monthlyPayment.text();
+                const match = firstResult.match(/^[£$€]/);
+                if (match) {
+                    this.currencySymbol = match[0];
+                }
             }
         }
 
@@ -59,9 +73,10 @@
         bindEvents() {
             const self = this;
 
-            // Input changes
+            // Input changes with debounced calculation
             this.$loanAmountInput.on('input', function() {
                 self.handleLoanAmountChange($(this));
+                self.debouncedCalculate();
             });
 
             this.$loanAmountInput.on('blur', function() {
@@ -70,6 +85,7 @@
 
             this.$interestRateInput.on('input', function() {
                 self.handleInterestRateChange($(this));
+                self.debouncedCalculate();
             });
 
             // Duration button clicks
@@ -81,15 +97,18 @@
             this.$calculateButton.on('click', function() {
                 self.calculateLoan();
             });
+        }
 
-            // Real-time calculation on input changes
-            this.$loanAmountInput.on('input', function() {
-                self.calculateLoan();
-            });
-
-            this.$interestRateInput.on('input', function() {
-                self.calculateLoan();
-            });
+        /**
+         * Debounced calculation to prevent excessive calculations
+         */
+        debouncedCalculate() {
+            clearTimeout(this.debounceTimer);
+            this.debounceTimer = setTimeout(() => {
+                if (this.validateInput()) {
+                    this.calculateLoan();
+                }
+            }, DEBOUNCE_DELAY);
         }
 
         /**
@@ -100,13 +119,17 @@
         }
 
         /**
+         * Sanitize numeric input (removes commas and non-digits)
+         */
+        sanitizeNumericInput(value) {
+            return value.replace(/,/g, '').replace(/[^\d]/g, '');
+        }
+
+        /**
          * Handle loan amount change
          */
         handleLoanAmountChange($input) {
-            let value = $input.val().replace(/,/g, '');
-
-            // Only allow numbers
-            value = value.replace(/[^\d]/g, '');
+            const value = this.sanitizeNumericInput($input.val());
 
             if (value) {
                 this.loanAmount = parseInt(value);
@@ -117,8 +140,7 @@
          * Format loan amount with commas
          */
         formatLoanAmount($input) {
-            let value = $input.val().replace(/,/g, '');
-            value = value.replace(/[^\d]/g, '');
+            const value = this.sanitizeNumericInput($input.val());
 
             if (value) {
                 const formatted = parseInt(value).toLocaleString();
@@ -197,8 +219,8 @@
          * Update result displays
          */
         updateResults(monthlyPayment, monthlyInterest, totalInterest, totalPayment, months) {
-            // Add animation class
-            $('.result-value').addClass('updated');
+            // Add animation class using cached elements
+            this.$allResults.addClass('updated');
 
             // Update values
             this.$monthlyPayment.text(this.formatCurrency(monthlyPayment));
@@ -208,9 +230,10 @@
             this.$totalCost.text(this.formatCurrency(totalPayment));
 
             // Remove animation class after animation completes
-            setTimeout(function() {
-                $('.result-value').removeClass('updated');
-            }, 300);
+            const self = this;
+            setTimeout(() => {
+                self.$allResults.removeClass('updated');
+            }, ANIMATION_DURATION);
         }
 
         /**

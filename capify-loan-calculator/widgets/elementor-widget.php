@@ -503,33 +503,38 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
 
-        // Build shortcode attributes
-        $atts = array(
-            'default_amount' => $settings['default_amount'],
-            'default_rate' => $settings['default_rate'],
-            'default_duration' => $settings['default_duration'],
-            'currency_symbol' => $settings['currency_symbol'],
-            'show_trustpilot' => $settings['show_trustpilot'],
-            'show_header' => isset($settings['show_header']) ? $settings['show_header'] : 'yes',
-            'header_title' => isset($settings['header_title']) ? $settings['header_title'] : 'Business Loan Calculator',
-            'show_intro' => isset($settings['show_intro']) ? $settings['show_intro'] : 'yes',
-            'intro_text' => isset($settings['intro_text']) ? $settings['intro_text'] : '',
-            'section_title' => isset($settings['section_title']) ? $settings['section_title'] : 'Want to understand the cost of your loan?',
-            'section_description' => isset($settings['section_description']) ? $settings['section_description'] : '',
-            'amount_label' => isset($settings['amount_label']) ? $settings['amount_label'] : 'Loan amount',
-            'rate_label' => isset($settings['rate_label']) ? $settings['rate_label'] : 'Annual interest rate',
-            'rate_help_text' => isset($settings['rate_help_text']) ? $settings['rate_help_text'] : '',
-            'duration_label' => isset($settings['duration_label']) ? $settings['duration_label'] : 'Loan duration',
-            'calculate_button_text' => isset($settings['calculate_button_text']) ? $settings['calculate_button_text'] : 'Calculate',
-            'quote_button_text' => isset($settings['quote_button_text']) ? $settings['quote_button_text'] : 'Get a quote',
-            'disclaimer_text' => isset($settings['disclaimer_text']) ? $settings['disclaimer_text'] : '',
-            'results_title' => isset($settings['results_title']) ? $settings['results_title'] : 'Your estimate',
-            'monthly_payment_label' => isset($settings['monthly_payment_label']) ? $settings['monthly_payment_label'] : 'Monthly payments',
-            'monthly_interest_label' => isset($settings['monthly_interest_label']) ? $settings['monthly_interest_label'] : 'Monthly interest',
-            'total_interest_label' => isset($settings['total_interest_label']) ? $settings['total_interest_label'] : 'Total interest',
-            'loan_length_label' => isset($settings['loan_length_label']) ? $settings['loan_length_label'] : 'Length of loan',
-            'total_cost_label' => isset($settings['total_cost_label']) ? $settings['total_cost_label'] : 'Total cost of loan',
+        // Default values
+        $defaults = array(
+            'default_amount' => 100000,
+            'default_rate' => 1.26,
+            'default_duration' => '24',
+            'currency_symbol' => '£',
+            'show_trustpilot' => 'yes',
+            'show_header' => 'yes',
+            'header_title' => 'Business Loan Calculator',
+            'show_intro' => 'yes',
+            'intro_text' => 'Use our SME Business Loan Calculator below to find out how much you can borrow to take your business to the next level.',
+            'section_title' => 'Want to understand the cost of your loan?',
+            'section_description' => 'Use our business loan calculator below to find out how much you can borrow to take your business to the next level.',
+            'amount_label' => 'Loan amount',
+            'rate_label' => 'Annual interest rate',
+            'rate_help_text' => 'Interest rates vary depending on the lender. Use 10% if you\'re unsure',
+            'duration_label' => 'Loan duration',
+            'calculate_button_text' => 'Calculate',
+            'quote_button_text' => 'Get a quote',
+            'disclaimer_text' => 'Calculations are indicative only and intended as a guide only.',
+            'results_title' => 'Your estimate',
+            'monthly_payment_label' => 'Monthly payments',
+            'monthly_interest_label' => 'Monthly interest',
+            'total_interest_label' => 'Total interest',
+            'loan_length_label' => 'Length of loan',
+            'total_cost_label' => 'Total cost of loan',
         );
+
+        // Merge settings with defaults
+        $atts = array_merge($defaults, array_filter($settings, function($value) {
+            return $value !== null && $value !== '';
+        }));
 
         // Add custom CSS for color customization
         if (!empty($settings['primary_color']) || !empty($settings['secondary_color']) ||
@@ -567,8 +572,8 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             <?php
         }
 
-        // Render the calculator using the main plugin class
-        $calculator = new Capify_Loan_Calculator();
+        // Render the calculator using the singleton instance
+        $calculator = Capify_Loan_Calculator::get_instance();
         echo $calculator->render_calculator($atts);
     }
 }

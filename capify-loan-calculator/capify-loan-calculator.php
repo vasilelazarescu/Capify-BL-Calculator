@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
- * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 1.0.0
+ * Description: A professional business loan calculator widget for WordPress with real-time calculations and optimized performance
+ * Version: 1.1.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -19,9 +19,24 @@ if (!defined('ABSPATH')) {
 class Capify_Loan_Calculator {
 
     /**
+     * Singleton instance
+     */
+    private static $instance = null;
+
+    /**
+     * Get singleton instance
+     */
+    public static function get_instance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
+    /**
      * Constructor
      */
-    public function __construct() {
+    private function __construct() {
         add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         add_shortcode('capify_loan_calculator', array($this, 'render_calculator'));
 
@@ -53,14 +68,46 @@ class Capify_Loan_Calculator {
 
     /**
      * Enqueue styles and scripts
+     * Only loads assets when calculator is present on the page
      */
     public function enqueue_scripts() {
+        global $post;
+
+        // Check if shortcode exists in content or if we're in Elementor editor
+        $load_assets = false;
+
+        // Check for shortcode in post content
+        if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'capify_loan_calculator')) {
+            $load_assets = true;
+        }
+
+        // Check if Elementor is active and we're in editor or preview
+        if (class_exists('\Elementor\Plugin')) {
+            if (\Elementor\Plugin::$instance->preview->is_preview_mode() ||
+                \Elementor\Plugin::$instance->editor->is_edit_mode()) {
+                $load_assets = true;
+            }
+
+            // Check if current post has Elementor data with our widget
+            if (is_a($post, 'WP_Post')) {
+                $elementor_data = get_post_meta($post->ID, '_elementor_data', true);
+                if (!empty($elementor_data) && strpos($elementor_data, 'capify_loan_calculator') !== false) {
+                    $load_assets = true;
+                }
+            }
+        }
+
+        // Only enqueue if calculator is present
+        if (!$load_assets) {
+            return;
+        }
+
         // Enqueue CSS
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '1.0.0'
+            '1.1.0'
         );
 
         // Enqueue JavaScript
@@ -68,7 +115,7 @@ class Capify_Loan_Calculator {
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.0',
+            '1.1.0',
             true
         );
     }
@@ -216,5 +263,5 @@ class Capify_Loan_Calculator {
     }
 }
 
-// Initialize the plugin
-new Capify_Loan_Calculator();
+// Initialize the plugin using singleton pattern
+Capify_Loan_Calculator::get_instance();
