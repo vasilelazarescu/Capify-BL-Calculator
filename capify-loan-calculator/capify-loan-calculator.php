@@ -55,101 +55,19 @@ class Capify_Loan_Calculator {
      * Enqueue styles and scripts
      */
     public function enqueue_scripts() {
-        // Enqueue noUiSlider default CSS first
-        wp_enqueue_style(
-            'nouislider',
-            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css',
-            array(),
-            '15.7.1'
-        );
-
-        // Enqueue our custom CSS (overrides noUiSlider defaults)
+        // Enqueue our custom CSS (no external dependencies)
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
-            array('nouislider'),
+            array(),
             '2.4.0'
         );
 
-        // Add critical inline CSS to ensure overrides work
-        $inline_css = '
-            /* Force override noUiSlider library defaults with maximum specificity */
-            .capify-loan-calculator-wrapper .slider-container .noUi-target,
-            .capify-loan-calculator-wrapper .slider-container .noUi-target.noUi-horizontal {
-                background: #f5f7f8 !important;
-                border: none !important;
-                box-shadow: none !important;
-                border-radius: 32px !important;
-                height: 8px !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-connect {
-                background: #a6ce39 !important;
-                border-radius: 32px !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-connects {
-                border-radius: 32px !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-handle {
-                width: 28px !important;
-                height: 28px !important;
-                right: -14px !important;
-                top: -10px !important;
-                background: #a6ce39 !important;
-                background-color: #a6ce39 !important;
-                border: none !important;
-                border-radius: 50% !important;
-                box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25) !important;
-                cursor: grab !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-handle:active {
-                cursor: grabbing !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-handle:focus {
-                outline: none !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-handle:before {
-                content: "" !important;
-                display: block !important;
-                position: absolute !important;
-                width: 12px !important;
-                height: 12px !important;
-                background-color: white !important;
-                border-radius: 50% !important;
-                top: 50% !important;
-                left: 50% !important;
-                transform: translate(-50%, -50%) !important;
-                border: none !important;
-                box-shadow: none !important;
-            }
-
-            .capify-loan-calculator-wrapper .slider-container .noUi-handle:after {
-                content: none !important;
-                display: none !important;
-            }
-        ';
-
-        wp_add_inline_style('capify-loan-calculator-style', $inline_css);
-
-        // Enqueue noUiSlider JS
-        wp_enqueue_script(
-            'nouislider',
-            'https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js',
-            array(),
-            '15.7.1',
-            true
-        );
-
-        // Enqueue JavaScript
+        // Enqueue JavaScript (no external dependencies)
         wp_enqueue_script(
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
-            array('jquery', 'nouislider'),
+            array('jquery'),
             '2.4.0',
             true
         );

@@ -1,12 +1,156 @@
 /**
  * Capify Business Loan Calculator JavaScript
  * Version: 2.4.0
- * Using noUiSlider library for optimized mobile performance
+ * Using custom lightweight slider for full style control and optimized mobile performance
  */
 
 (function($) {
     'use strict';
 
+    /**
+     * Custom Slider Class
+     * Lightweight, performant, fully styleable slider
+     */
+    class CustomSlider {
+        constructor(container, options) {
+            this.container = container;
+            this.options = Object.assign({
+                min: 0,
+                max: 100,
+                start: 0,
+                step: 1,
+                onChange: null,
+                onSlide: null,
+                onUpdate: null
+            }, options);
+
+            this.value = this.options.start;
+            this.isDragging = false;
+            this.init();
+        }
+
+        init() {
+            // Create slider HTML structure
+            this.container.innerHTML = `
+                <div class="custom-slider-track">
+                    <div class="custom-slider-progress"></div>
+                    <div class="custom-slider-handle">
+                        <div class="custom-slider-handle-dot"></div>
+                    </div>
+                </div>
+            `;
+
+            this.track = this.container.querySelector('.custom-slider-track');
+            this.progress = this.container.querySelector('.custom-slider-progress');
+            this.handle = this.container.querySelector('.custom-slider-handle');
+
+            this.attachEvents();
+            this.setValue(this.value);
+        }
+
+        attachEvents() {
+            // Mouse events
+            this.handle.addEventListener('mousedown', this.onStart.bind(this));
+            this.track.addEventListener('mousedown', this.onTrackClick.bind(this));
+            document.addEventListener('mousemove', this.onMove.bind(this));
+            document.addEventListener('mouseup', this.onEnd.bind(this));
+
+            // Touch events
+            this.handle.addEventListener('touchstart', this.onStart.bind(this), { passive: false });
+            this.track.addEventListener('touchstart', this.onTrackClick.bind(this), { passive: false });
+            document.addEventListener('touchmove', this.onMove.bind(this), { passive: false });
+            document.addEventListener('touchend', this.onEnd.bind(this));
+        }
+
+        onStart(e) {
+            e.preventDefault();
+            this.isDragging = true;
+            this.handle.classList.add('dragging');
+        }
+
+        onTrackClick(e) {
+            if (e.target === this.handle || this.handle.contains(e.target)) return;
+
+            const rect = this.track.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const percentage = Math.max(0, Math.min(1, x / rect.width));
+            const value = this.percentageToValue(percentage);
+
+            this.setValue(value);
+            this.triggerCallback('onChange');
+            this.triggerCallback('onSlide');
+        }
+
+        onMove(e) {
+            if (!this.isDragging) return;
+            e.preventDefault();
+
+            const rect = this.track.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const percentage = Math.max(0, Math.min(1, x / rect.width));
+            const value = this.percentageToValue(percentage);
+
+            this.setValue(value);
+            this.triggerCallback('onSlide');
+        }
+
+        onEnd() {
+            if (!this.isDragging) return;
+
+            this.isDragging = false;
+            this.handle.classList.remove('dragging');
+            this.triggerCallback('onChange');
+        }
+
+        percentageToValue(percentage) {
+            const range = this.options.max - this.options.min;
+            let value = this.options.min + (range * percentage);
+
+            // Apply step
+            if (this.options.step) {
+                value = Math.round(value / this.options.step) * this.options.step;
+            }
+
+            return Math.max(this.options.min, Math.min(this.options.max, value));
+        }
+
+        valueToPercentage(value) {
+            const range = this.options.max - this.options.min;
+            return ((value - this.options.min) / range) * 100;
+        }
+
+        setValue(value) {
+            this.value = Math.max(this.options.min, Math.min(this.options.max, value));
+            const percentage = this.valueToPercentage(this.value);
+
+            // Use transform for GPU acceleration
+            this.handle.style.left = percentage + '%';
+            this.progress.style.width = percentage + '%';
+
+            this.triggerCallback('onUpdate');
+        }
+
+        getValue() {
+            return this.value;
+        }
+
+        triggerCallback(callbackName) {
+            if (this.options[callbackName] && typeof this.options[callbackName] === 'function') {
+                this.options[callbackName](this.value);
+            }
+        }
+
+        destroy() {
+            this.handle.removeEventListener('mousedown', this.onStart);
+            this.track.removeEventListener('mousedown', this.onTrackClick);
+            this.handle.removeEventListener('touchstart', this.onStart);
+            this.track.removeEventListener('touchstart', this.onTrackClick);
+        }
+    }
+
+    /**
+     * Capify Loan Calculator Class
+     */
     class CapifyLoanCalculator {
         constructor($wrapper) {
             this.$wrapper = $wrapper;
@@ -20,12 +164,12 @@
             // Duration slider config
             this.minDuration = parseInt($wrapper.attr('data-min-duration')) || 3;
             this.maxDuration = parseInt($wrapper.attr('data-max-duration')) || 12;
-            this.currentDuration = this.minDuration; // Start with minimum
+            this.currentDuration = this.minDuration;
 
             // Turnover slider config
             this.minTurnover = parseInt($wrapper.attr('data-min-turnover')) || 10000;
             this.maxTurnover = parseInt($wrapper.attr('data-max-turnover')) || 500000;
-            this.currentTurnover = this.minTurnover; // Start with minimum
+            this.currentTurnover = this.minTurnover;
 
             // Track if user has interacted
             this.hasInteracted = false;
@@ -54,16 +198,8 @@
         }
 
         init() {
-            // Check if noUiSlider is available
-            if (typeof noUiSlider === 'undefined') {
-                console.error('noUiSlider library not loaded');
-                return;
-            }
-
             this.setupDurationSlider();
             this.setupTurnoverSlider();
-
-            // Show empty state initially
             this.showEmptyState();
         }
 
@@ -80,100 +216,50 @@
         setupDurationSlider() {
             const self = this;
 
-            // Create noUiSlider
-            this.durationSliderInstance = noUiSlider.create(this.$durationSlider, {
-                start: [this.minDuration],
-                connect: [true, false],
-                range: {
-                    'min': this.minDuration,
-                    'max': this.maxDuration
-                },
+            this.durationSliderInstance = new CustomSlider(this.$durationSlider, {
+                min: this.minDuration,
+                max: this.maxDuration,
+                start: this.minDuration,
                 step: 1,
-                tooltips: false,
-                animate: true,
-                animationDuration: 300,
-                behaviour: 'tap-drag',
-                format: {
-                    to: function(value) {
-                        return Math.round(value);
-                    },
-                    from: function(value) {
-                        return Number(value);
+                onUpdate: function(value) {
+                    self.currentDuration = Math.round(value);
+                    self.$durationDisplay.text(self.currentDuration + ' months');
+                },
+                onSlide: function() {
+                    if (!self.hasInteracted) {
+                        self.hasInteracted = true;
+                        self.showResults();
                     }
+                    self.calculateLoan();
+                },
+                onChange: function() {
+                    self.calculateLoan();
                 }
-            });
-
-            // Update on slider change
-            this.durationSliderInstance.on('update', function(values, handle) {
-                const value = parseInt(values[handle]);
-                self.currentDuration = value;
-                self.$durationDisplay.text(value + ' months');
-            });
-
-            // Calculate on slider slide (while dragging)
-            this.durationSliderInstance.on('slide', function() {
-                // Show results on first interaction
-                if (!self.hasInteracted) {
-                    self.hasInteracted = true;
-                    self.showResults();
-                }
-
-                self.calculateLoan();
-            });
-
-            // Also calculate on change (when released)
-            this.durationSliderInstance.on('change', function() {
-                self.calculateLoan();
             });
         }
 
         setupTurnoverSlider() {
             const self = this;
 
-            // Create noUiSlider
-            this.turnoverSliderInstance = noUiSlider.create(this.$turnoverSlider, {
-                start: [this.minTurnover],
-                connect: [true, false],
-                range: {
-                    'min': this.minTurnover,
-                    'max': this.maxTurnover
-                },
+            this.turnoverSliderInstance = new CustomSlider(this.$turnoverSlider, {
+                min: this.minTurnover,
+                max: this.maxTurnover,
+                start: this.minTurnover,
                 step: 1000,
-                tooltips: false,
-                animate: true,
-                animationDuration: 300,
-                behaviour: 'tap-drag',
-                format: {
-                    to: function(value) {
-                        return Math.round(value / 1000) * 1000;
-                    },
-                    from: function(value) {
-                        return Number(value);
+                onUpdate: function(value) {
+                    self.currentTurnover = Math.round(value / 1000) * 1000;
+                    self.$turnoverDisplay.text(self.currencySymbol + ' ' + self.formatNumber(self.currentTurnover));
+                },
+                onSlide: function() {
+                    if (!self.hasInteracted) {
+                        self.hasInteracted = true;
+                        self.showResults();
                     }
+                    self.calculateLoan();
+                },
+                onChange: function() {
+                    self.calculateLoan();
                 }
-            });
-
-            // Update on slider change
-            this.turnoverSliderInstance.on('update', function(values, handle) {
-                const value = parseInt(values[handle]);
-                self.currentTurnover = value;
-                self.$turnoverDisplay.text(self.currencySymbol + ' ' + self.formatNumber(value));
-            });
-
-            // Calculate on slider slide (while dragging)
-            this.turnoverSliderInstance.on('slide', function() {
-                // Show results on first interaction
-                if (!self.hasInteracted) {
-                    self.hasInteracted = true;
-                    self.showResults();
-                }
-
-                self.calculateLoan();
-            });
-
-            // Also calculate on change (when released)
-            this.turnoverSliderInstance.on('change', function() {
-                self.calculateLoan();
             });
         }
 

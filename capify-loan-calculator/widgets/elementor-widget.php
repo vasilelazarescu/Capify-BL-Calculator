@@ -673,7 +673,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Track Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-target' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
+                    '{{WRAPPER}} .custom-slider-track' => 'background-color: {{VALUE}}; background: {{VALUE}};',
                 ],
             ]
         );
@@ -684,7 +684,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Progress Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-connect' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
+                    '{{WRAPPER}} .custom-slider-progress' => 'background-color: {{VALUE}}; background: {{VALUE}};',
                 ],
             ]
         );
@@ -695,7 +695,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'label' => __('Thumb Color', 'capify-loan-calculator'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle' => 'background-color: {{VALUE}} !important; background: {{VALUE}} !important;',
+                    '{{WRAPPER}} .custom-slider-handle' => 'background-color: {{VALUE}}; background: {{VALUE}};',
                 ],
             ]
         );
@@ -727,7 +727,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                     'unit' => 'px',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-target' => 'height: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .custom-slider-track' => 'height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -755,9 +755,8 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                     'unit' => 'px',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-target' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
-                    '{{WRAPPER}} .slider-container .noUi-connect' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
-                    '{{WRAPPER}} .slider-container .noUi-connects' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .custom-slider-track' => 'border-radius: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .custom-slider-progress' => 'border-radius: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -789,7 +788,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                     'unit' => 'px',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important; right: calc(-{{SIZE}}{{UNIT}} / 2) !important; top: calc(-{{SIZE}}{{UNIT}} / 2 + 4px) !important;',
+                    '{{WRAPPER}} .custom-slider-handle' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}}; margin-left: calc(-{{SIZE}}{{UNIT}} / 2); margin-top: calc(-{{SIZE}}{{UNIT}} / 2);',
                 ],
             ]
         );
@@ -817,7 +816,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                     'unit' => '%',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle' => 'border-radius: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .custom-slider-handle' => 'border-radius: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -827,7 +826,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
             [
                 'name' => 'slider_thumb_box_shadow',
                 'label' => __('Thumb Box Shadow', 'capify-loan-calculator'),
-                'selector' => '{{WRAPPER}} .slider-container .noUi-handle',
+                'selector' => '{{WRAPPER}} .custom-slider-handle',
             ]
         );
 
@@ -847,7 +846,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'default' => '#ffffff',
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle:before' => 'background-color: {{VALUE}} !important;',
+                    '{{WRAPPER}} .custom-slider-handle-dot' => 'background-color: {{VALUE}};',
                 ],
             ]
         );
@@ -870,7 +869,7 @@ class Capify_Loan_Calculator_Elementor_Widget extends \Elementor\Widget_Base {
                     'unit' => 'px',
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .slider-container .noUi-handle:before' => 'width: {{SIZE}}{{UNIT}} !important; height: {{SIZE}}{{UNIT}} !important;',
+                    '{{WRAPPER}} .custom-slider-handle-dot' => 'width: {{SIZE}}{{UNIT}}; height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
