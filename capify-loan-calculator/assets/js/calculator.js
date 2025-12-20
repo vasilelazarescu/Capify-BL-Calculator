@@ -216,10 +216,26 @@
         }
     }
 
-    // Initialize calculator when DOM is ready
-    $(document).ready(function() {
+    // Initialize calculator function
+    function initCalculators() {
         $('.capify-loan-calculator-wrapper').each(function() {
-            new CapifyLoanCalculator($(this));
+            // Check if already initialized
+            if (!$(this).data('calculator-initialized')) {
+                new CapifyLoanCalculator($(this));
+                $(this).data('calculator-initialized', true);
+            }
+        });
+    }
+
+    // Initialize on DOM ready
+    $(document).ready(function() {
+        initCalculators();
+    });
+
+    // Initialize in Elementor editor
+    $(window).on('elementor/frontend/init', function() {
+        elementorFrontend.hooks.addAction('frontend/element_ready/capify_loan_calculator.default', function($scope) {
+            initCalculators();
         });
     });
 
