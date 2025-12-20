@@ -3,7 +3,7 @@
  * Plugin Name: Capify Business Loan Calculator
  * Plugin URI: https://github.com/vasilelazarescu/Capify-BL-Calculator
  * Description: A professional business loan calculator widget for WordPress with real-time calculations
- * Version: 1.0.0
+ * Version: 2.4.0
  * Author: Capify
  * Author URI: https://capify.com
  * License: GPL v2 or later
@@ -55,20 +55,20 @@ class Capify_Loan_Calculator {
      * Enqueue styles and scripts
      */
     public function enqueue_scripts() {
-        // Enqueue CSS
+        // Enqueue our custom CSS (no external dependencies)
         wp_enqueue_style(
             'capify-loan-calculator-style',
             plugin_dir_url(__FILE__) . 'assets/css/calculator.css',
             array(),
-            '1.0.0'
+            '2.4.0'
         );
 
-        // Enqueue JavaScript
+        // Enqueue JavaScript (no external dependencies)
         wp_enqueue_script(
             'capify-loan-calculator-script',
             plugin_dir_url(__FILE__) . 'assets/js/calculator.js',
             array('jquery'),
-            '1.0.0',
+            '2.4.0',
             true
         );
     }
@@ -79,135 +79,152 @@ class Capify_Loan_Calculator {
     public function render_calculator($atts) {
         // Parse attributes
         $atts = shortcode_atts(array(
-            'default_amount' => '100000',
-            'default_rate' => '1.26',
-            'default_duration' => '24',
-            'currency_symbol' => '£',
-            'show_trustpilot' => 'yes',
-            'show_header' => 'yes',
+            'show_header_icon' => 'no',
+            'header_icon' => '',
             'header_title' => 'Business Loan Calculator',
-            'show_intro' => 'yes',
-            'intro_text' => 'Use our SME Business Loan Calculator below to find out how much you can borrow to take your business to the next level.',
-            'section_title' => 'Want to understand the cost of your loan?',
-            'section_description' => 'Use our business loan calculator below to find out how much you can borrow to take your business to the next level.',
-            'amount_label' => 'Loan amount',
-            'rate_label' => 'Annual interest rate',
-            'rate_help_text' => 'Interest rates vary depending on the lender. Use 10% if you\'re unsure',
-            'duration_label' => 'Loan duration',
-            'calculate_button_text' => 'Calculate',
-            'quote_button_text' => 'Get a quote',
-            'disclaimer_text' => 'Calculations are indicative only and intended as a guide only. The figures calculated are not a statement of the actual repayments that will be charged on any actual loan and do not constitute a loan offer.',
-            'results_title' => 'Your estimate',
-            'monthly_payment_label' => 'Monthly payments',
-            'monthly_interest_label' => 'Monthly interest',
-            'total_interest_label' => 'Total interest',
-            'loan_length_label' => 'Length of loan',
-            'total_cost_label' => 'Total cost of loan',
+            'header_subtitle' => 'Get an estimate of how much you might be able to borrow in under a minute.',
+            'duration_label' => 'How long do you want to lend over?',
+            'turnover_label' => 'What is your monthly average turnover?',
+            'borrow_months_min' => '3',
+            'borrow_months_maximum' => '12',
+            'borrow_turnover_min' => '10000',
+            'borrow_turnover_maximum' => '500000',
+            'default_duration' => '3',
+            'default_turnover' => '10000',
+            'loan_cap' => '500000',
+            'borrow_factor' => '1.26',
+            'gross_percentage' => '0.13',
+            'currency_symbol' => '£',
+            'results_title' => 'Congratulations!',
+            'results_subtitle' => 'You may be eligible for a loan amount up to:',
+            'disclaimer_text' => '* Subject to Capify\'s standard credit assessment criterial terms & conditions',
+            'repayment_section_label' => 'Your Repayment:',
+            'daily_repayment_label' => 'Daily repayments:',
+            'monthly_repayment_label' => 'Monthly repayments:',
+            'total_cost_label' => 'Total Cost of Loan:',
+            'total_repayment_label' => 'Total Repayment:',
+            'empty_state_title' => 'Your estimate will appear here',
+            'empty_state_subtitle' => 'Move the sliders to get your instant loan estimate',
+            'empty_state_custom_icon' => '',
+            'empty_state_icon_position' => 'before',
         ), $atts);
 
         ob_start();
         ?>
-        <div class="capify-loan-calculator-wrapper">
-            <?php if ($atts['show_header'] === 'yes'): ?>
-            <div class="calculator-header">
-                <h1><?php echo esc_html($atts['header_title']); ?></h1>
-                <?php if ($atts['show_trustpilot'] === 'yes'): ?>
-                <div class="trustpilot-badge">
-                    <div class="trustpilot-stars">★★★★★</div>
-                    <div class="trustpilot-text">TrustScore 4.8 | 1,334 reviews</div>
-                </div>
-                <?php endif; ?>
-            </div>
-            <?php endif; ?>
+        <div class="capify-loan-calculator-wrapper"
+             data-borrow-factor="<?php echo esc_attr($atts['borrow_factor']); ?>"
+             data-gross-percentage="<?php echo esc_attr($atts['gross_percentage']); ?>"
+             data-loan-cap="<?php echo esc_attr($atts['loan_cap']); ?>"
+             data-currency="<?php echo esc_attr($atts['currency_symbol']); ?>"
+             data-min-duration="<?php echo esc_attr($atts['borrow_months_min']); ?>"
+             data-max-duration="<?php echo esc_attr($atts['borrow_months_maximum']); ?>"
+             data-min-turnover="<?php echo esc_attr($atts['borrow_turnover_min']); ?>"
+             data-max-turnover="<?php echo esc_attr($atts['borrow_turnover_maximum']); ?>">
 
-            <?php if ($atts['show_intro'] === 'yes' && !empty($atts['intro_text'])): ?>
-            <div class="calculator-intro">
-                <p><?php echo esc_html($atts['intro_text']); ?></p>
-            </div>
-            <?php endif; ?>
-
-            <div class="calculator-container">
+            <div class="calculator-card">
+                <!-- Left Column: Inputs -->
                 <div class="calculator-left">
-                    <div class="calculator-section-header">
-                        <h2><?php echo esc_html($atts['section_title']); ?></h2>
-                        <span class="info-icon">ⓘ</span>
+                    <!-- Header Section -->
+                    <div class="header">
+                        <?php if ($atts['show_header_icon'] === 'yes' && !empty($atts['header_icon'])): ?>
+                            <div class="header-icon">
+                                <?php \Elementor\Icons_Manager::render_icon($atts['header_icon'], ['aria-hidden' => 'true']); ?>
+                            </div>
+                        <?php endif; ?>
+                        <h1 class="title"><?php echo esc_html($atts['header_title']); ?></h1>
+                        <p class="subtitle"><?php echo esc_html($atts['header_subtitle']); ?></p>
                     </div>
 
-                    <?php if (!empty($atts['section_description'])): ?>
-                    <p class="calculator-description"><?php echo esc_html($atts['section_description']); ?></p>
-                    <?php endif; ?>
-
-                    <div class="calculator-form">
-                        <div class="form-group">
-                            <label for="loan-amount"><?php echo esc_html($atts['amount_label']); ?></label>
-                            <div class="input-wrapper">
-                                <span class="currency-symbol"><?php echo esc_html($atts['currency_symbol']); ?></span>
-                                <input type="text" id="loan-amount" class="form-control" value="<?php echo esc_attr($atts['default_amount']); ?>" />
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="interest-rate"><?php echo esc_html($atts['rate_label']); ?></label>
-                            <div class="input-wrapper">
-                                <span class="percent-symbol">%</span>
-                                <input type="text" id="interest-rate" class="form-control" value="<?php echo esc_attr($atts['default_rate']); ?>" />
-                            </div>
-                            <?php if (!empty($atts['rate_help_text'])): ?>
-                            <p class="help-text"><?php echo esc_html($atts['rate_help_text']); ?></p>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="form-group">
-                            <label><?php echo esc_html($atts['duration_label']); ?></label>
-                            <div class="duration-buttons">
-                                <button type="button" class="duration-btn" data-months="12">12<br>months</button>
-                                <button type="button" class="duration-btn active" data-months="24">24<br>months</button>
-                                <button type="button" class="duration-btn" data-months="36">36<br>months</button>
-                            </div>
-                            <div class="duration-buttons">
-                                <button type="button" class="duration-btn" data-months="48">48<br>months</button>
-                                <button type="button" class="duration-btn" data-months="60">60<br>months</button>
-                                <button type="button" class="duration-btn" data-months="72">72<br>months</button>
-                            </div>
-                        </div>
-
-                        <button type="button" id="calculate-btn" class="calculate-btn"><?php echo esc_html($atts['calculate_button_text']); ?></button>
+                    <!-- Loan Duration Section -->
+                    <div class="input-section">
+                        <label class="input-label"><?php echo esc_html($atts['duration_label']); ?></label>
+                        <p class="input-value" id="duration-display"><?php echo esc_attr($atts['default_duration']); ?> months</p>
+                        <div class="slider-container" id="duration-slider-container"></div>
                     </div>
 
-                    <?php if (!empty($atts['disclaimer_text'])): ?>
-                    <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
-                    <?php endif; ?>
+                    <!-- Monthly Turnover Section -->
+                    <div class="input-section">
+                        <label class="input-label"><?php echo esc_html($atts['turnover_label']); ?></label>
+                        <p class="input-value" id="turnover-display"><?php echo esc_html($atts['currency_symbol']); ?> <?php echo number_format($atts['default_turnover']); ?></p>
+                        <div class="slider-container" id="turnover-slider-container"></div>
+                    </div>
                 </div>
 
+                <!-- Right Column: Results -->
                 <div class="calculator-right">
-                    <h2><?php echo esc_html($atts['results_title']); ?></h2>
+                    <!-- Results Panel -->
+                <div class="results-panel">
+                    <!-- Empty State -->
+                    <div class="empty-state <?php echo ($atts['empty_state_icon_position'] === 'after') ? 'icon-after' : 'icon-before'; ?>" id="empty-state">
+                        <?php
+                        // Icon/Image HTML
+                        $icon_html = '<div class="empty-state-icon">';
+                        if (!empty($atts['empty_state_custom_icon'])) {
+                            $icon_html .= '<img src="' . esc_url($atts['empty_state_custom_icon']) . '" alt="' . esc_attr($atts['empty_state_title']) . '" />';
+                        } else {
+                            $icon_html .= '<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">';
+                            $icon_html .= '<rect x="20" y="30" width="80" height="60" rx="8" fill="#f5f7f8" stroke="#edf1f2" stroke-width="2"/>';
+                            $icon_html .= '<rect x="30" y="45" width="25" height="4" rx="2" fill="#a6ce39"/>';
+                            $icon_html .= '<rect x="30" y="55" width="35" height="4" rx="2" fill="#a6ce39"/>';
+                            $icon_html .= '<rect x="65" y="45" width="25" height="4" rx="2" fill="#edf1f2"/>';
+                            $icon_html .= '<rect x="65" y="55" width="35" height="4" rx="2" fill="#edf1f2"/>';
+                            $icon_html .= '</svg>';
+                        }
+                        $icon_html .= '</div>';
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['monthly_payment_label']); ?></div>
-                        <div class="result-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>4,221.57</div>
+                        // Text HTML
+                        $text_html = '<h2 class="empty-state-title">' . esc_html($atts['empty_state_title']) . '</h2>';
+                        $text_html .= '<p class="empty-state-subtitle">' . esc_html($atts['empty_state_subtitle']) . '</p>';
+
+                        // Render in order based on position setting
+                        if ($atts['empty_state_icon_position'] === 'after') {
+                            echo $text_html;
+                            echo $icon_html;
+                        } else {
+                            echo $icon_html;
+                            echo $text_html;
+                        }
+                        ?>
                     </div>
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['monthly_interest_label']); ?></div>
-                        <div class="result-value" id="monthly-interest"><?php echo esc_html($atts['currency_symbol']); ?>54.91</div>
-                    </div>
+                    <!-- Results Content -->
+                    <div class="results-content" id="results-content" style="display: none;">
+                        <div class="results-header">
+                            <h2 class="results-title"><?php echo esc_html($atts['results_title']); ?></h2>
+                            <p class="results-subtitle"><?php echo esc_html($atts['results_subtitle']); ?></p>
+                            <p class="loan-amount" id="loan-amount"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            <p class="disclaimer"><?php echo esc_html($atts['disclaimer_text']); ?></p>
+                        </div>
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['total_interest_label']); ?></div>
-                        <div class="result-value" id="total-interest"><?php echo esc_html($atts['currency_symbol']); ?>1,317.78</div>
-                    </div>
+                        <div class="divider"></div>
 
-                    <div class="result-item">
-                        <div class="result-label"><?php echo esc_html($atts['loan_length_label']); ?></div>
-                        <div class="result-value" id="loan-length">24 months</div>
-                    </div>
+                        <p class="section-label"><?php echo esc_html($atts['repayment_section_label']); ?></p>
 
-                    <div class="result-item total">
-                        <div class="result-label"><?php echo esc_html($atts['total_cost_label']); ?></div>
-                        <div class="result-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>101,317.78</div>
-                    </div>
+                        <div class="repayment-grid">
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['daily_repayment_label']); ?></p>
+                                <p class="repayment-value" id="daily-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                            <div class="vertical-divider"></div>
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['monthly_repayment_label']); ?></p>
+                                <p class="repayment-value" id="monthly-payment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                            <div class="vertical-divider"></div>
+                            <div class="repayment-item">
+                                <p class="repayment-label"><?php echo esc_html($atts['total_cost_label']); ?></p>
+                                <p class="repayment-value" id="total-cost"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                            </div>
+                        </div>
 
-                    <button type="button" class="quote-btn"><?php echo esc_html($atts['quote_button_text']); ?></button>
+                        <div class="divider"></div>
+
+                        <div class="total-section">
+                            <p class="total-label"><?php echo esc_html($atts['total_repayment_label']); ?></p>
+                            <p class="total-value" id="total-repayment"><?php echo esc_html($atts['currency_symbol']); ?>0</p>
+                        </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>

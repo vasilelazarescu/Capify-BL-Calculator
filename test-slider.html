@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>noUiSlider Dependency Test</title>
+    <link rel="stylesheet" href="capify-loan-calculator/assets/css/calculator.css">
+</head>
+<body>
+    <div style="max-width: 1200px; margin: 50px auto; padding: 20px;">
+        <h1>noUiSlider Dependency Test</h1>
+
+        <div class="capify-loan-calculator-wrapper"
+             data-borrow-factor="1.26"
+             data-gross-percentage="0.13"
+             data-loan-cap="500000"
+             data-currency="£"
+             data-min-duration="3"
+             data-max-duration="12"
+             data-min-turnover="10000"
+             data-max-turnover="500000">
+
+            <div class="calculator-card">
+                <div class="calculator-left">
+                    <div class="header">
+                        <h1 class="title">Test Slider</h1>
+                        <p class="subtitle">Testing noUiSlider dependencies</p>
+                    </div>
+
+                    <div class="input-section">
+                        <label class="input-label">Duration Slider</label>
+                        <p class="input-value" id="duration-display">3 months</p>
+                        <div class="slider-container" id="duration-slider-container"></div>
+                    </div>
+
+                    <div class="input-section">
+                        <label class="input-label">Turnover Slider</label>
+                        <p class="input-value" id="turnover-display">£ 10,000</p>
+                        <div class="slider-container" id="turnover-slider-container"></div>
+                    </div>
+                </div>
+
+                <div class="calculator-right">
+                    <div class="results-panel">
+                        <div class="empty-state" id="empty-state">
+                            <h2 class="empty-state-title">Move the sliders</h2>
+                            <p class="empty-state-subtitle">Test if they appear and work</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <script src="capify-loan-calculator/assets/js/calculator.js"></script>
+
+    <script>
+        // Test script to verify noUiSlider loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('jQuery loaded:', typeof jQuery !== 'undefined');
+            console.log('noUiSlider loaded:', typeof noUiSlider !== 'undefined');
+            console.log('Duration slider element:', document.getElementById('duration-slider-container'));
+            console.log('Turnover slider element:', document.getElementById('turnover-slider-container'));
+
+            // Wait a bit and check if sliders were created
+            setTimeout(function() {
+                const durationSlider = document.getElementById('duration-slider-container');
+                const turnoverSlider = document.getElementById('turnover-slider-container');
+                console.log('Duration slider has noUi-target class:', durationSlider && durationSlider.classList.contains('noUi-target'));
+                console.log('Turnover slider has noUi-target class:', turnoverSlider && turnoverSlider.classList.contains('noUi-target'));
+
+                // Check for visual elements
+                const handles = document.querySelectorAll('.noUi-handle');
+                console.log('Number of slider handles found:', handles.length);
+
+                const connects = document.querySelectorAll('.noUi-connect');
+                console.log('Number of slider connects found:', connects.length);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
